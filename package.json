@@ -1,22 +1,17 @@
 {
-  "name": "middolle-drive",
+  "name": "electrontest",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "main.js",
+  "devDependencies": {
+    "babel-preset-es2015-node6": "^0.4.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "electron": "^1.7.9"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MLOA/Middole-Drive.git"
+  "scripts": {
+    "start": "electron ."
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MLOA/Middole-Drive/issues"
-  },
-  "homepage": "https://github.com/MLOA/Middole-Drive#readme",
-  "devDependencies": {
-    "electron": "^1.7.9"
-  }
+  "license": "ISC"
 }
