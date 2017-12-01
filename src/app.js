@@ -14,13 +14,13 @@ exapp.use(bodyParser.urlencoded({
   extended: true
 }))
 
-exapp.get('/info/', function(req, res) {
-  res.send(btc.info());
-});
+exapp.get('/info/', (req, res) => {
+  res.send(btc.info())
+})
 
-exapp.get('/discovery/', function(req, res) {
-  res.send(btc.discovery());
-});
+exapp.get('/discovery/', (req, res) => {
+  res.send(btc.discovery())
+})
 
 exapp.listen(port, '127.0.0.1')
 
