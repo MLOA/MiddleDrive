@@ -3,7 +3,7 @@
 import electron from 'electron'
 import express from 'express'
 import bodyParser from 'body-parser'
-import controller from './controllers'
+import btc from './btCommands'
 
 const port = (process.env.PORT || 3000)
 
@@ -13,6 +13,15 @@ exapp.use(bodyParser.json())
 exapp.use(bodyParser.urlencoded({
   extended: true
 }))
+
+exapp.get('/info/', function(req, res) {
+  res.send(btc.info());
+});
+
+exapp.get('/discovery/', function(req, res) {
+  res.send(btc.discovery());
+});
+
 exapp.listen(port, '127.0.0.1')
 
 const app = electron.app
@@ -32,7 +41,7 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({width: 600, height: 400, useContentSize: true})
 
   //mainWindow.webContents.openDevTools()
-  mainWindow.loadURL('http://127.0.0.1:' + port + '/')
+  mainWindow.loadURL('http://127.0.0.1:' + port + '/discovery')
 
   // ウィンドウが閉じられたらアプリも終了
   mainWindow.on('closed', () => {
