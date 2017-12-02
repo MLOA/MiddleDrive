@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+$baseColor: #efefef;
+
+* {
+	box-sizing: border-box;
+}
+
+body, p, h1 {
+	margin: 0;
+}
+
+body {
+	background: $baseColor;
+	font-family: 'Roboto',-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI","Noto Sans Japanese","ヒラギノ角ゴ ProN W3", Meiryo, sans-serif;
+	& header {
+		background: gray;
+		padding: .5rem 1rem;
+		display: flex;
+		align-items: center;
+		color: white;
+		& h1 {
+			flex-grow: 1;
+			font-weight: 500;
+		}
+		& nav {
+			& ul {
+				& li {
+					cursor: pointer;
+					display: inline-block;
+					min-width: 4rem;
+					padding: 0.5rem 0;
+					margin: 0 0.5rem;
+					border: 1px solid;
+					text-align: center;
+				}
+			}
+		}
+	}
+	& main {
+		margin: 1rem;
+	}
+	& footer {
+		margin: 1rem;
+	}
+}

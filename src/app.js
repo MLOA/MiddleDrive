@@ -1,4 +1,4 @@
-'use strct'
+'use strict'
 
 import electron from 'electron'
 import express from 'express'
@@ -38,10 +38,10 @@ app.on('window-all-closed', () => {
 // Electronの初期化完了後に実行
 app.on('ready', () => {
   //ウィンドウサイズを1280*720（フレームサイズを含まない）に設定する
-  mainWindow = new BrowserWindow({width: 600, height: 400, useContentSize: true})
+  mainWindow = new BrowserWindow({ width: 600, height: 400, useContentSize: true })
 
-  //mainWindow.webContents.openDevTools()
-  mainWindow.loadURL('http://127.0.0.1:' + port + '/discovery')
+  // mainWindow.webContents.openDevTools()
+  mainWindow.loadURL('http://127.0.0.1:' + port)
 
   // ウィンドウが閉じられたらアプリも終了
   mainWindow.on('closed', () => {
