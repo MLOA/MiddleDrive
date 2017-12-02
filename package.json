@@ -15,7 +15,6 @@
     "babel-preset-es2015-node6": "^0.4.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
-    "electron": "^1.7.9",
     "electron-packager": "^10.1.0",
     "electron-rebuild": "^1.6.0",
     "npm-run-all": "^4.1.2",
