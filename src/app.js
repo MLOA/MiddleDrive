@@ -3,7 +3,7 @@
 import electron from 'electron'
 import express from 'express'
 import bodyParser from 'body-parser'
-import btc from './btCommands'
+import serial from './serial'
 
 const port = (process.env.PORT || 3000)
 
@@ -14,12 +14,12 @@ exapp.use(bodyParser.urlencoded({
   extended: true
 }))
 
-exapp.get('/info/', (req, res) => {
-  res.send(btc.info())
+exapp.get('/send/:text', (req, res) => {
+  res.send(serial.send(res.params))
 })
 
-exapp.get('/discovery/', (req, res) => {
-  res.send(btc.discovery())
+exapp.get('/receive/', (req, res) => {
+  res.send(serial.discovery())
 })
 
 exapp.listen(port, '127.0.0.1')

@@ -17,6 +17,7 @@
     "babel-register": "^6.26.0",
     "electron": "^1.7.9",
     "electron-packager": "^10.1.0",
+    "electron-rebuild": "^1.6.0",
     "npm-run-all": "^4.1.2",
     "postcss-cli": "^4.1.1",
     "postcss-cssnext": "^3.0.2",
