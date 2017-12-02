@@ -1,12 +1,6 @@
 node_modules/
 package-lock.json
 dist/
-
-# electron
-MiddleDrive-win32-x64/
 yarn.lock
-.DS_Store
-.env
-.vs/
 .vscode/
 *.log

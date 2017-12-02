@@ -3,7 +3,7 @@ const path = require('path')
 
 module.exports = {
 	entry: {
-		index: './src/electron/js/index.js'
+		index: './src/js/index.js'
 	},
 	output: {
 		path: path.join(__dirname, 'public/'),
