@@ -1,24 +1,38 @@
 'use strict'
 
 import express from 'express'
-import bodyParser from 'body-parser'
-import serial from './serial'
+import SerialPort from 'serialport'
 
-const port = (process.env.PORT || 3000)
+var app = express()
+var port = new SerialPort('COM3')
 
-const exapp = express()
-exapp.use(express.static('public'))
-exapp.use(bodyParser.json())
-exapp.use(bodyParser.urlencoded({
-  extended: true
-}))
+app.use(express.static('public'))
 
-exapp.get('/send/:text', (req, res) => {
-  res.send(serial.send(res.params))
+app.get('/', function (req, res) {
+  res.send('hello world')
 })
 
-exapp.get('/receive/', (req, res) => {
-  res.send(serial.discovery())
+app.get('/send/:text', function (req, res) {
+  port.write(req.params.text, (err) => {
+    if (err) console.log('Error on write: ' + err.message)
+    else console.log('message written')
+  })
+  res.send('wei')
 })
 
-exapp.listen(port, '127.0.0.1')
+app.listen(3000, function () {
+  port.on('error', function (err) {
+    console.log('Error: ', err.message)
+  })
+
+  port.on('data', function (data) {
+    console.log('Data:', data.toString())
+  })
+
+  port.write('init', (err) => {
+    if (err) console.log('Error on write: ' + err.message)
+    else console.log('message written')
+  })
+
+  console.log('Example app listening on port 3000!')
+})
