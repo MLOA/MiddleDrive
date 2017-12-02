@@ -14,10 +14,9 @@ app.get('/', function (req, res) {
 
 app.post('/send/:text', function (req, res) {
   port.write(req.params.text, (err) => {
-    if (err) console.log('Error on write: ' + err.message)
-    else console.log('message written')
+    if (err) res.send('Error on write: ' + err.message)
+    else res.send('message written')
   })
-  res.send('wei')
 })
 
 app.listen(3000, function () {

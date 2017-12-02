@@ -85,7 +85,6 @@ var send = function send(text) {
 };
 
 var submitButton = document.querySelector('.submit');
-
 submitButton.addEventListener('click', function (e) {
 	send(document.querySelector('textarea').value);
 });
