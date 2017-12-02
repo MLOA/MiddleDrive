@@ -12,7 +12,7 @@ app.get('/', function (req, res) {
   res.send('hello world')
 })
 
-app.get('/send/:text', function (req, res) {
+app.post('/send/:text', function (req, res) {
   port.write(req.params.text, (err) => {
     if (err) console.log('Error on write: ' + err.message)
     else console.log('message written')

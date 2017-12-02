@@ -72,5 +72,23 @@
 
 console.log('hello');
 
+var send = function send(text) {
+	var url = 'http://localhost:3000/send/' + text;
+	return fetch(url, {
+		method: 'POST',
+		mode: 'cors'
+	}).then(function (res) {
+		return res.text();
+	}).then(function (t) {
+		console.log('data' + t);
+	});
+};
+
+var submitButton = document.querySelector('.submit');
+
+submitButton.addEventListener('click', function (e) {
+	send(document.querySelector('textarea').value);
+});
+
 /***/ })
 /******/ ]);
