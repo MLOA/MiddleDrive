@@ -70,7 +70,7 @@
 "use strict";
 
 
-console.log('hello');
+console.log('index');
 
 var send = function send(text) {
 	var url = 'http://localhost:3000/send/' + text;
@@ -80,13 +80,15 @@ var send = function send(text) {
 	}).then(function (res) {
 		return res.text();
 	}).then(function (t) {
-		console.log('data' + t);
+		console.log('result: ' + t);
 	});
 };
 
 var submitButton = document.querySelector('.submit');
 submitButton.addEventListener('click', function (e) {
-	send(document.querySelector('textarea').value);
+	var text = document.querySelector('textarea').value;
+	console.log('send: ', text);
+	send(text);
 });
 
 /***/ })
