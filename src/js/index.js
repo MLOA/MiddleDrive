@@ -1,4 +1,4 @@
-console.log('hello')
+console.log('index')
 
 const send = text => {
 	const url = 'http://localhost:3000/send/' + text
@@ -8,11 +8,13 @@ const send = text => {
 	}).then(res => {
 		return res.text()
 	}).then(t => {
-		console.log('data' + t)
+		console.log('result: ' + t)
 	})
 }
 
 const submitButton = document.querySelector('.submit')
 submitButton.addEventListener('click', e => {
-	send(document.querySelector('textarea').value)
+	const text = document.querySelector('textarea').value
+	console.log('send: ', text)
+	send(text)
 })
