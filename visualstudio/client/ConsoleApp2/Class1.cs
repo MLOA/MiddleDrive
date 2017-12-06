@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
@@ -55,11 +57,27 @@ namespace ConsoleApp2 {
             Console.WriteLine(_service.ConnectionHostName.ToString());
             Console.WriteLine("メッセージを入力してください");
             receive();
-            send();
+
+            try {
+                HttpListener httplistener = new HttpListener();
+                httplistener.Prefixes.Add("http://localhost:8000/");
+                httplistener.Start();
+                while (true) {
+                    HttpListenerContext context = httplistener.GetContext();
+                    HttpListenerResponse res = context.Response;
+                    var message = context.Request.RawUrl.TrimStart('/');
+                    await send(message);
+                    res.StatusCode = 200;
+                    byte[] content = Encoding.UTF8.GetBytes(message);
+                    res.OutputStream.Write(content, 0, content.Length);
+                    res.Close();
+                }
+            } catch (Exception ex) {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
 
-        async void send() {
-            var text = Console.ReadLine();
+        async Task send(String text) {
             Console.WriteLine("W:" + text);
             if (text.Length < 30) {
                 text = text.PadRight(30, '*');
@@ -68,15 +86,18 @@ namespace ConsoleApp2 {
             }
             writer.WriteString(text);
             await writer.StoreAsync();
-            send();
         }
 
         async void receive() {
-            Console.WriteLine("受信待ちを開始します");
-            var res = await reader.LoadAsync(30);
-            var text2 = reader.ReadString(30);
-            Console.WriteLine("R:" + text2);
-            receive();
+            try {
+                Console.WriteLine("受信待ちを開始します");
+                var res = await reader.LoadAsync(30);
+                var text2 = reader.ReadString(30);
+                Console.WriteLine("R:" + text2);
+                receive();
+            } catch (Exception ex) {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
     }
 }

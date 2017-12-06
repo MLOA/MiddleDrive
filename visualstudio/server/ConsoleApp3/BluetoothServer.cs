@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking.Sockets;
@@ -38,8 +40,7 @@ namespace MiddleDriveServer {
             sendHello();
         }
 
-        async void send() {
-            var text = Console.ReadLine();
+        async Task send(String text) {
             Console.WriteLine("W:" + text);
             if (text.Length < 30) {
                 text = text.PadRight(30, '*');
@@ -48,7 +49,6 @@ namespace MiddleDriveServer {
             }
             writer.WriteString(text);
             await writer.StoreAsync();
-            send();
         }
 
         async void sendHello() {
@@ -61,14 +61,35 @@ namespace MiddleDriveServer {
             }
             writer.WriteString(text);
             await writer.StoreAsync();
-            send();
+
+            try {
+                HttpListener httplistener = new HttpListener();
+                httplistener.Prefixes.Add("http://localhost:8000/");
+                httplistener.Start();
+                while (true) {
+                    HttpListenerContext context = httplistener.GetContext();
+                    HttpListenerResponse res = context.Response;
+                    var message = context.Request.RawUrl.TrimStart('/');
+                    await send(message);
+                    res.StatusCode = 200;
+                    byte[] content = Encoding.UTF8.GetBytes(message);
+                    res.OutputStream.Write(content, 0, content.Length);
+                    res.Close();
+                }
+            } catch (Exception ex) {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
 
         async void receive() {
-            var res = await reader.LoadAsync(30);
-            var text2 = reader.ReadString(30);
-            Console.WriteLine("R:" + text2);
-            receive();
+            try {
+                var res = await reader.LoadAsync(30);
+                var text2 = reader.ReadString(30);
+                Console.WriteLine("R:" + text2);
+                receive();
+            } catch (Exception ex) {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
 
     }
