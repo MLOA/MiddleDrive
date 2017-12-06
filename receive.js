@@ -6,5 +6,5 @@ port.on('error', err => {
 })
 
 port.on('data', function (data) {
-	console.log('receive:', data.toString())
+	console.log('Receive:', data.toString())
 })

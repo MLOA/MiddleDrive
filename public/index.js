@@ -72,6 +72,17 @@
 
 console.log('index');
 
+var lastModifiedTime = 0;
+
+var socket = io();
+socket.on('receive', function (str) {
+	var obj = JSON.parse(str);
+	if (Number(obj.time) > Number(lastModifiedTime)) {
+		document.querySelector('textarea').textContent = obj.text;
+		lastModifiedTime = Number(obj.time);
+	}
+});
+
 var send = function send(text) {
 	var url = 'http://localhost:3000/send/' + text;
 	return fetch(url, {
@@ -80,15 +91,28 @@ var send = function send(text) {
 	}).then(function (res) {
 		return res.text();
 	}).then(function (t) {
-		console.log('result: ' + t);
+		if (!t === 'complete') console.log('result: ' + t);
 	});
+};
+var getTimeStamp = function getTimeStamp() {
+	var d = new Date();
+	var year = d.getFullYear();
+	var month = d.getMonth() + 1;
+	var day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+	var hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+	var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+	var sec = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds();
+	return Number('' + year + month + day + hour + min + sec);
 };
 
 var submitButton = document.querySelector('.submit');
 submitButton.addEventListener('click', function (e) {
-	var text = document.querySelector('textarea').value;
-	console.log('send: ', text);
-	send(text);
+	var sendObj = {
+		time: getTimeStamp(),
+		text: document.querySelector('textarea').value
+	};
+	console.log('send: ', sendObj);
+	send(JSON.stringify(sendObj));
 });
 
 /***/ })

@@ -5,7 +5,8 @@
   "main": "./dist/app.js",
   "dependencies": {
     "express": "^4.16.2",
-    "serialport": "^6.0.4"
+    "serialport": "^6.0.4",
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
