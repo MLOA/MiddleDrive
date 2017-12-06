@@ -26,11 +26,14 @@ app
 		const sqlite3 = require('sqlite3').verbose()
 		const db = new sqlite3.Database('//rt-ac3200-b250/sda1/client/middle_drive.db')
 		db.serialize(() => {
-			db.all('SELECT * FROM text', (err, rows) => {
+			db.all('SELECT * FROM text WHERE id = (select max(id) from text)', (err, rows) => {
 				const rowsObj = rows.map(row => {
-					return { time: row.datetime, text: row.line }
+					return {
+						time: row.datetime,
+						text: decodeURIComponent(row.line)
+					}
 				})
-				res.send(rowsObj)
+				res.send(rowsObj[0])
 			})
 		})
 		db.close()

@@ -1,4 +1,4 @@
-import { setInterval } from "timers";
+import { setInterval } from "timers"
 
 console.log('index')
 
@@ -29,6 +29,7 @@ const check = () => {
 	}).then(res => {
 		return res.json()
 	}).then(data => {
+		update(data.text)
 		console.log('result', data)
 	})
 }
@@ -41,4 +42,4 @@ textarea.addEventListener('keyup', e => {
 
 setInterval(() => {
 	check()
-}, 5000)
+}, 500)

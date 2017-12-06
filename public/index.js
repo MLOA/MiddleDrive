@@ -101,6 +101,7 @@ var check = function check() {
 	}).then(function (res) {
 		return res.json();
 	}).then(function (data) {
+		update(data.text);
 		console.log('result', data);
 	});
 };
@@ -113,7 +114,7 @@ textarea.addEventListener('keyup', function (e) {
 
 (0, _timers.setInterval)(function () {
 	check();
-}, 5000);
+}, 500);
 
 /***/ }),
 /* 1 */
