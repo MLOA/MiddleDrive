@@ -48,12 +48,8 @@ namespace MiddleDriveServer {
         }
 
         async Task send(String text) {
-            Console.WriteLine("W:" + text);
-            if (text.Length < 30) {
-                text = text.PadRight(30, '*');
-            } else {
-                text = text.Substring(0, 30);
-            }
+            var buff = Encoding.UTF8.GetBytes(text);
+            writer.WriteInt32(buff.Length);
             writer.WriteString(text);
             await writer.StoreAsync();
         }
@@ -61,11 +57,8 @@ namespace MiddleDriveServer {
         async void sendHello() {
             var text = "Hello";
             Console.WriteLine("W:" + text);
-            if (text.Length < 30) {
-                text = text.PadRight(30, '*');
-            } else {
-                text = text.Substring(0, 30);
-            }
+            var buff = Encoding.UTF8.GetBytes(text);
+            writer.WriteInt32(buff.Length);
             writer.WriteString(text);
             await writer.StoreAsync();
 
@@ -73,7 +66,7 @@ namespace MiddleDriveServer {
                 HttpListener httplistener = new HttpListener();
                 httplistener.Prefixes.Add("http://localhost:8000/");
                 httplistener.Start();
-                while (true) {
+                while (true) {                    
                     HttpListenerContext context = httplistener.GetContext();
                     HttpListenerResponse res = context.Response;
                     var message = context.Request.RawUrl.TrimStart('/');
@@ -90,8 +83,10 @@ namespace MiddleDriveServer {
 
         async void receive() {
             try {
-                var res = await reader.LoadAsync(30);
-                var text2 = reader.ReadString(30);
+                await reader.LoadAsync(sizeof(int));
+                var length = reader.ReadInt32();
+                await reader.LoadAsync((uint)length);
+                var text2 = reader.ReadString((uint)length);
                 Console.WriteLine("R:" + text2);
                 using (var con = new SQLiteConnection(dbName)) {
                     con.Open();
