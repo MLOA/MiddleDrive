@@ -72,6 +72,8 @@
 
 console.log('index');
 
+var textarea = document.querySelector('textarea');
+
 var send = function send(text) {
 	var url = '/send/' + text;
 	return fetch(url, {
@@ -81,7 +83,12 @@ var send = function send(text) {
 		return res.text();
 	}).then(function (t) {
 		console.log('result: ' + t);
+		update(t);
 	});
+};
+
+var update = function update(str) {
+	textarea.value = str;
 };
 
 var check = function check() {
@@ -96,12 +103,9 @@ var check = function check() {
 	});
 };
 
-var update = function update(str) {};
-
-var submitButton = document.querySelector('.submit');
-submitButton.addEventListener('click', function (e) {
-	var text = document.querySelector('textarea').value;
-	console.log('send: ', text);
+textarea.addEventListener('keyup', function (e) {
+	var text = textarea.value;
+	// console.log('send: ', text)
 	send(text);
 });
 

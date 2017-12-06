@@ -1,5 +1,7 @@
 console.log('index')
 
+const textarea = document.querySelector('textarea')
+
 const send = text => {
 	const url = '/send/' + text
 	return fetch(url, {
@@ -9,7 +11,12 @@ const send = text => {
 		return res.text()
 	}).then(t => {
 		console.log('result: ' + t)
+		update(t)
 	})
+}
+
+const update = str => {
+	textarea.value = str
 }
 
 const check = () => {
@@ -24,13 +31,8 @@ const check = () => {
 	})
 }
 
-const update = str => {
-
-}
-
-const submitButton = document.querySelector('.submit')
-submitButton.addEventListener('click', e => {
-	const text = document.querySelector('textarea').value
-	console.log('send: ', text)
+textarea.addEventListener('keyup', e => {
+	const text = textarea.value
+	// console.log('send: ', text)
 	send(text)
 })
