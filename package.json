@@ -5,6 +5,7 @@
   "main": "./dist/app.js",
   "dependencies": {
     "express": "^4.16.2",
+    "node-fetch": "^1.7.3",
     "serialport": "^6.0.4"
   },
   "devDependencies": {

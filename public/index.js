@@ -73,9 +73,9 @@
 console.log('index');
 
 var send = function send(text) {
-	var url = 'http://localhost:8000/' + text;
+	var url = '/send/' + text;
 	return fetch(url, {
-		method: 'POST',
+		method: 'GET',
 		mode: 'cors'
 	}).then(function (res) {
 		return res.text();
@@ -83,6 +83,20 @@ var send = function send(text) {
 		console.log('result: ' + t);
 	});
 };
+
+var check = function check() {
+	var url = '/check/';
+	return fetch(url, {
+		method: 'GET',
+		mode: 'cors'
+	}).then(function (res) {
+		return res.text();
+	}).then(function (t) {
+		console.log('result: ' + t);
+	});
+};
+
+var update = function update(str) {};
 
 var submitButton = document.querySelector('.submit');
 submitButton.addEventListener('click', function (e) {
