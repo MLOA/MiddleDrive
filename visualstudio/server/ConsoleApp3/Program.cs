@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp3 {
+﻿namespace MiddleDriveServer {
     class Program {
         static void Main(string[] args) {
             var bltServer = new BluetoothServer();

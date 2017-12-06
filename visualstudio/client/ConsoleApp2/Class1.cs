@@ -53,19 +53,13 @@ namespace ConsoleApp2 {
             writer = new DataWriter(_socket.OutputStream);
             reader = new DataReader(_socket.InputStream);
             Console.WriteLine(_service.ConnectionHostName.ToString());
-
-            await SendCommand("start");
-            while (true) {
-                string text = Console.ReadLine();
-                if (text == "quit" || text == "end") break;
-                await SendCommand(text);
-            }
-
-            writer.Dispose();
-            reader.Dispose();
+            Console.WriteLine("メッセージを入力してください");
+            receive();
+            send();
         }
 
-        async Task SendCommand(string text) {
+        async void send() {
+            var text = Console.ReadLine();
             Console.WriteLine("W:" + text);
             if (text.Length < 30) {
                 text = text.PadRight(30, '*');
@@ -74,14 +68,15 @@ namespace ConsoleApp2 {
             }
             writer.WriteString(text);
             await writer.StoreAsync();
+            send();
+        }
 
-            try {
-                //var res = await reader.LoadAsync(8);
-                //var text2 = reader.ReadString(8);
-                //Console.WriteLine("R:" + text2);
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
+        async void receive() {
+            Console.WriteLine("受信待ちを開始します");
+            var res = await reader.LoadAsync(30);
+            var text2 = reader.ReadString(30);
+            Console.WriteLine("R:" + text2);
+            receive();
         }
     }
 }
