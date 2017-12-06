@@ -1,7 +1,7 @@
 console.log('index')
 
 const send = text => {
-	const url = 'http://localhost:3000/send/' + text
+	const url = 'http://localhost:8000/' + text
 	return fetch(url, {
 		method: 'POST',
 		mode: 'cors'

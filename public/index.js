@@ -73,7 +73,7 @@
 console.log('index');
 
 var send = function send(text) {
-	var url = 'http://localhost:3000/send/' + text;
+	var url = 'http://localhost:8000/' + text;
 	return fetch(url, {
 		method: 'POST',
 		mode: 'cors'
