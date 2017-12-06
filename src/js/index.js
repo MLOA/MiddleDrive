@@ -1,3 +1,5 @@
+import { setInterval } from "timers";
+
 console.log('index')
 
 const textarea = document.querySelector('textarea')
@@ -25,9 +27,9 @@ const check = () => {
 		method: 'GET',
 		mode: 'cors'
 	}).then(res => {
-		return res.text()
-	}).then(t => {
-		console.log('result: ' + t)
+		return res.json()
+	}).then(data => {
+		console.log('result', data)
 	})
 }
 
@@ -36,3 +38,7 @@ textarea.addEventListener('keyup', e => {
 	// console.log('send: ', text)
 	send(text)
 })
+
+setInterval(() => {
+	check()
+}, 5000)
