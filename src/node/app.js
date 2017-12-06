@@ -1,36 +1,26 @@
 'use strict'
 
 import express from 'express'
-import SerialPort from 'serialport'
+import fetch from 'node-fetch'
 
 const app = express()
 const port = 3000
-const serialport = new SerialPort('COM3')
 
 app
-  .use(express.static('public'))
-  .get('/', (req, res) => {
-    res.send('hello world')
-  })
-  .post('/send/:text', (req, res) => {
-    serialport.write(req.params.text, (err) => {
-      if (err) res.send('Error on write: ' + err.message)
-      else res.send('message written')
-    })
-  })
-  .listen(port, () => {
-    serialport.on('error', err => {
-      console.log('Error: ', err.message)
-    })
-
-    serialport.on('data', function (data) {
-      console.log('Data:', data.toString())
-    })
-
-    serialport.write('init', err => {
-      if (err) console.log('Error on write: ' + err.message)
-      else console.log('message written')
-    })
-
-    console.log(`URL -> http://localhost:${port}/`)
-  })
+	.use(express.static('public'))
+	.get('/', (req, res) => {
+	})
+	.get('/send/:text', (req, res) => {
+		const url = 'http://localhost:8000/' + req.params.text
+		return fetch(url, {
+			method: 'GET',
+			mode: 'cors'
+		}).then(result => {
+			return result.text()
+		}).then(text => {
+			res.send(text)
+		})
+	})
+	.listen(port, () => {
+		console.log(`URL -> http://localhost:${port}/`)
+	})
