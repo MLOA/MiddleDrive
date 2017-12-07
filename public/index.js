@@ -77,32 +77,33 @@ console.log('index');
 var textarea = document.querySelector('textarea');
 
 var send = function send(text) {
-	var textObj = text.split(/\r?\n/g).map(function (line, i) {
-		return {
-			num: i + 1,
-			text: line
-		};
-	});
-
 	var sendObj = {
 		'time': '20171208120000',
 		'cursors': [{
 			'line': 1,
 			'column': 3
 		}],
-		'lines': textObj,
+		'lines': text.split(/\r?\n/g).map(function (line, i) {
+			return {
+				num: i + 1,
+				text: line
+			};
+		}),
 		'device': 'MLOA-PC'
 	};
-
-	var url = '/send/' + JSON.stringify(sendObj);
+	var url = '/send/';
 	return fetch(url, {
-		method: 'GET',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(sendObj),
 		mode: 'cors'
 	}).then(function (res) {
 		return res.text();
 	}).then(function (t) {
 		console.log('result: ' + t);
-		update(t);
+		// update(t)
 	});
 };
 
@@ -123,8 +124,8 @@ var check = function check() {
 	}).then(function (data) {
 		var decodedText = decodeURI(data);
 		var json = JSON.parse(decodedText);
-		update(json.lines);
-		console.log('result', json);
+		// update(json.lines)
+		// console.log('result', json)
 	});
 };
 

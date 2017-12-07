@@ -5,13 +5,6 @@ console.log('index')
 const textarea = document.querySelector('textarea')
 
 const send = text => {
-	const textObj = text.split(/\r?\n/g).map((line, i) => {
-		return {
-			num: i + 1,
-			text: line
-		}
-	})
-
 	const sendObj = {
 		'time': '20171208120000',
 		'cursors': [
@@ -20,19 +13,27 @@ const send = text => {
 				'column': 3
 			}
 		],
-		'lines': textObj,
+		'lines': text.split(/\r?\n/g).map((line, i) => {
+			return {
+				num: i + 1,
+				text: line
+			}
+		}),
 		'device': 'MLOA-PC'
 	}
-
-	const url = '/send/' + JSON.stringify(sendObj)
+	const url = '/send/'
 	return fetch(url, {
-		method: 'GET',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(sendObj),
 		mode: 'cors'
 	}).then(res => {
 		return res.text()
 	}).then(t => {
 		console.log('result: ' + t)
-		update(t)
+		// update(t)
 	})
 }
 
@@ -51,8 +52,8 @@ const check = () => {
 	}).then(data => {
 		const decodedText = decodeURI(data)
 		const json = JSON.parse(decodedText)
-		update(json.lines)
-		console.log('result', json)
+		// update(json.lines)
+		// console.log('result', json)
 	})
 }
 

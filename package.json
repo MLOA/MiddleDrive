@@ -4,6 +4,7 @@
   "description": "",
   "main": "./dist/app.js",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "node-fetch": "^1.7.3",
     "serialport": "^6.0.4",

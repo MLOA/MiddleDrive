@@ -2,19 +2,26 @@
 
 import express from 'express'
 import fetch from 'node-fetch'
+import bodyParser from 'body-parser'
 
 const app = express()
 const port = 3000
 
 app
   .use(express.static('public'))
+  .use(bodyParser.urlencoded({
+    // extended: true
+  }))
+  .use(bodyParser.json())
   .get('/', (req, res) => {
   })
-  .get('/send/:text', (req, res) => {
-    const url = 'http://localhost:8000/' + req.params.text
+  .post('/send/', (req, res) => {
+    const url = 'http://localhost:8000/'
+    // console.log(req.body)
     return fetch(url, {
-      method: 'GET',
-      mode: 'cors'
+      method: 'POST',
+      body: req.body,
+      mode: 'cors',
     }).then(result => {
       return result.text()
     }).then(text => {

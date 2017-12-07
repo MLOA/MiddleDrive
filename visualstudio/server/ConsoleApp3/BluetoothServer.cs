@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,14 +67,17 @@ namespace MiddleDriveServer {
                 HttpListener httplistener = new HttpListener();
                 httplistener.Prefixes.Add("http://localhost:8000/");
                 httplistener.Start();
-                while (true) {                    
-                    HttpListenerContext context = httplistener.GetContext();
-                    HttpListenerResponse res = context.Response;
-                    var message = context.Request.RawUrl.TrimStart('/');
-                    await send(message);
+                while (true) {
+                    var context = httplistener.GetContext();
+                    var res = context.Response;
+                    var req = context.Request;
+                    var param = "";
+                    using (var reader = new StreamReader(req.InputStream, req.ContentEncoding)) {
+                        param = reader.ReadToEnd();
+                    }
+
+                    await send(param);
                     res.StatusCode = 200;
-                    byte[] content = Encoding.UTF8.GetBytes(message);
-                    res.OutputStream.Write(content, 0, content.Length);
                     res.Close();
                 }
             } catch (Exception ex) {
