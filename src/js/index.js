@@ -5,8 +5,9 @@ console.log('index')
 const textarea = document.querySelector('textarea')
 
 const send = text => {
+	lastSendTime = getTimeStamp()
 	const sendObj = {
-		'time': '20171208120000',
+		'time': lastSendTime,
 		'cursors': [
 			{
 				'line': 1,
@@ -21,6 +22,7 @@ const send = text => {
 		}),
 		'device': 'MLOA-PC'
 	}
+	console.log(text)
 	const url = '/send/'
 	return fetch(url, {
 		method: 'POST',
@@ -31,9 +33,6 @@ const send = text => {
 		mode: 'cors'
 	}).then(res => {
 		return res.text()
-	}).then(t => {
-		// console.log('result: ' + t)
-		// update(t)
 	})
 }
 
@@ -52,20 +51,38 @@ const check = () => {
 	}).then(data => {
 		const decodedText = decodeURI(data)
 		const json = JSON.parse(decodedText)
-		// update(json.lines)
-		// console.log('result', json)
+		return json
 	})
 }
 
+const getTimeStamp = () => {
+	const d = new Date()
+	const year = d.getFullYear()
+	const month = d.getMonth() + 1
+	const day = (d.getDate() < 10) ? '0' + d.getDate() : d.getDate()
+	const hour = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours()
+	const min = (d.getMinutes() < 10) ? '0' + d.getMinutes() : d.getMinutes()
+	const sec = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds()
+	const msec = ('000' + d.getMilliseconds()).slice(-3)
+	return Number(`${year}${month}${day}${hour}${min}${sec}${msec}`)
+}
+
+let lastSendTime = 0
+
 textarea.addEventListener('keyup', e => {
 	const text = textarea.value
-	// console.log('send: ', text)
-	send(text)
+	send(text).then(res => {
+
+	})
 })
 
 setInterval(() => {
-	check()
-}, 500)
+	check().then(json => {
+		if (lastSendTime < json.time) {
+			update(json.lines)
+		}
+	})
+}, 400)
 
 const checkButton = document.querySelector('.check')
 checkButton.addEventListener('click', e => {

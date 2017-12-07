@@ -77,8 +77,9 @@ console.log('index');
 var textarea = document.querySelector('textarea');
 
 var send = function send(text) {
+	lastSendTime = getTimeStamp();
 	var sendObj = {
-		'time': '20171208120000',
+		'time': lastSendTime,
 		'cursors': [{
 			'line': 1,
 			'column': 3
@@ -91,6 +92,7 @@ var send = function send(text) {
 		}),
 		'device': 'MLOA-PC'
 	};
+	console.log(text);
 	var url = '/send/';
 	return fetch(url, {
 		method: 'POST',
@@ -101,9 +103,6 @@ var send = function send(text) {
 		mode: 'cors'
 	}).then(function (res) {
 		return res.text();
-	}).then(function (t) {
-		// console.log('result: ' + t)
-		// update(t)
 	});
 };
 
@@ -124,20 +123,36 @@ var check = function check() {
 	}).then(function (data) {
 		var decodedText = decodeURI(data);
 		var json = JSON.parse(decodedText);
-		// update(json.lines)
-		// console.log('result', json)
+		return json;
 	});
 };
 
+var getTimeStamp = function getTimeStamp() {
+	var d = new Date();
+	var year = d.getFullYear();
+	var month = d.getMonth() + 1;
+	var day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+	var hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+	var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+	var sec = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds();
+	var msec = ('000' + d.getMilliseconds()).slice(-3);
+	return Number('' + year + month + day + hour + min + sec + msec);
+};
+
+var lastSendTime = 0;
+
 textarea.addEventListener('keyup', function (e) {
 	var text = textarea.value;
-	// console.log('send: ', text)
-	send(text);
+	send(text).then(function (res) {});
 });
 
 (0, _timers.setInterval)(function () {
-	check();
-}, 500);
+	check().then(function (json) {
+		if (lastSendTime < json.time) {
+			update(json.lines);
+		}
+	});
+}, 400);
 
 var checkButton = document.querySelector('.check');
 checkButton.addEventListener('click', function (e) {

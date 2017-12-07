@@ -28,6 +28,7 @@ body {
 		margin: 1rem;
 		& textarea {
 			resize: none;
+			width: 100%;
 		}
 	}
 }

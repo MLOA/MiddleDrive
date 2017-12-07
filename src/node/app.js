@@ -16,23 +16,32 @@ app
   .get('/', (req, res) => {
   })
   .post('/send/', (req, res) => {
-    const url = 'http://localhost:8000/'
-    // console.log(req.body)
-    return fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(req.body),
-      mode: 'cors',
-    }).then(result => {
-      return result.text()
-    }).then(text => {
-      res.send(text)
+    const sqlite3 = require('sqlite3').verbose()
+    const db = new sqlite3.Database(process.cwd() + '/visualstudio/server/ConsoleApp3/bin/Debug/middle_drive.db')
+    db.serialize(() => {
+      db.run('INSERT INTO text(line, datetime) VALUES (?, ?)',
+        [JSON.stringify(req.body), req.body.time],
+        err => {
+          if (err !== null) console.log(err)
+          const url = 'http://localhost:8000/'
+          return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(req.body),
+            mode: 'cors',
+          }).then(result => {
+            return result.text()
+          }).then(text => {
+            res.send(text)
+          })
+        })
     })
+    db.close()
   })
   .get('/check/', (req, res) => {
     const sqlite3 = require('sqlite3').verbose()
     const db = new sqlite3.Database(process.cwd() + '/visualstudio/server/ConsoleApp3/bin/Debug/middle_drive.db')
     db.serialize(() => {
-      const sql = 'SELECT * FROM text WHERE id = (select max(id) from text)'
+      const sql = 'SELECT * FROM text WHERE datetime = (select max(datetime) from text)'
       db.all(sql, (err, rows) => {
         res.send(rows[0].line)
       })
