@@ -72,26 +72,232 @@
 
 var _timers = __webpack_require__(1);
 
+var _caretposition = __webpack_require__(7);
+
+var _caretposition2 = _interopRequireDefault(_caretposition);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Measurement = new function () {
+	this.caretPos = function (textarea, mode) {
+		var targetElement = textarea;
+		if (typeof jQuery != 'undefined') {
+			if (textarea instanceof jQuery) {
+				targetElement = textarea.get(0);
+			}
+		}
+		// HTML Sanitizer
+		var escapeHTML = function escapeHTML(s) {
+			var obj = document.createElement('pre');
+			obj[typeof obj.textContent != 'undefined' ? 'textContent' : 'innerText'] = s;
+			return obj.innerHTML;
+		};
+
+		// Get caret character position.
+		var getCaretPosition = function getCaretPosition(element) {
+			var CaretPos = 0;
+			var startpos = -1;
+			var endpos = -1;
+			if (document.selection) {
+				// IE Support(not yet)
+				var docRange = document.selection.createRange();
+				var textRange = document.body.createTextRange();
+				textRange.moveToElementText(element);
+
+				var range = textRange.duplicate();
+				range.setEndPoint('EndToStart', docRange);
+				startpos = range.text.length;
+
+				var range = textRange.duplicate();
+				range.setEndPoint('EndToEnd', docRange);
+				endpos = range.text.length;
+			} else if (element.selectionStart || element.selectionStart == '0') {
+				// Firefox support
+				startpos = element.selectionStart;
+				endpos = element.selectionEnd;
+			}
+			return { start: startpos, end: endpos };
+		};
+
+		// Get element css style.
+		var getStyle = function getStyle(element) {
+			var style = element.currentStyle || document.defaultView.getComputedStyle(element, '');
+			return style;
+		};
+
+		// Get element absolute position
+		var getElementPosition = function getElementPosition(element) {
+			// Get scroll amount.
+			var html = document.documentElement;
+			var body = document.body;
+			var scrollLeft = body.scrollLeft || html.scrollLeft;
+			var scrollTop = body.scrollTop || html.scrollTop;
+
+			// Adjust "IE 2px bugfix" and scroll amount.
+			var rect = element.getBoundingClientRect();
+			var left = rect.left - html.clientLeft + scrollLeft;
+			var top = rect.top - html.clientTop + scrollTop;
+			var right = rect.right - html.clientLeft + scrollLeft;
+			var bottom = rect.bottom - html.clientTop + scrollTop;
+			return {
+				left: parseInt(left), top: parseInt(top),
+				right: parseInt(right), bottom: parseInt(bottom)
+			};
+		};
+
+		/***************************\
+  * Main function start here! *
+  \***************************/
+
+		var undefined;
+		var salt = "salt.akiroom.com";
+		var textAreaPosition = getElementPosition(targetElement);
+		var dummyName = targetElement.id + "_dummy";
+		var dummyTextArea = document.getElementById(dummyName);
+		if (!dummyTextArea) {
+			// Generate dummy textarea.
+			dummyTextArea = document.createElement("div");
+			dummyTextArea.id = dummyName;
+			var textAreaStyle = getStyle(targetElement);
+			dummyTextArea.style.cssText = textAreaStyle.cssText;
+
+			// Fix for browser differece.
+			var isWordWrap = false;
+			if (targetElement.wrap == "off") {
+				// chrome, firefox wordwrap=off
+				dummyTextArea.style.overflow = "auto";
+				dummyTextArea.style.whiteSpace = "pre";
+				isWordWrap = false;
+			} else if (targetElement.wrap == undefined) {
+				if (textAreaStyle.wordWrap == "break-word")
+					// safari, wordwrap=on
+					isWordWrap = true;else
+					// safari, wordwrap=off
+					isWordWrap = false;
+			} else {
+				// firefox wordwrap=on
+				dummyTextArea.style.overflowY = "auto";
+				isWordWrap = true;
+			}
+			dummyTextArea.style.visibility = 'hidden';
+			dummyTextArea.style.position = 'absolute';
+			dummyTextArea.style.top = '0px';
+			dummyTextArea.style.left = '0px';
+
+			// Firefox Support
+			dummyTextArea.style.width = textAreaStyle.width;
+			dummyTextArea.style.height = textAreaStyle.height;
+			dummyTextArea.style.fontSize = textAreaStyle.fontSize;
+			dummyTextArea.style.maxWidth = textAreaStyle.width;
+			dummyTextArea.style.backgroundColor = textAreaStyle.backgroundColor;
+			dummyTextArea.style.fontFamily = textAreaStyle.fontFamily;
+			dummyTextArea.style.padding = textAreaStyle.padding;
+			dummyTextArea.style.paddingTop = textAreaStyle.paddingTop;
+			dummyTextArea.style.paddingRight = textAreaStyle.paddingRight;
+			dummyTextArea.style.paddingBottom = textAreaStyle.paddingBottom;
+			dummyTextArea.style.paddingLeft = textAreaStyle.paddingLeft;
+
+			targetElement.parentNode.appendChild(dummyTextArea);
+		}
+
+		// Set scroll amount to dummy textarea.
+		dummyTextArea.scrollLeft = targetElement.scrollLeft;
+		dummyTextArea.scrollTop = targetElement.scrollTop;
+
+		// Set code strings.
+		var codeStr = targetElement.value;
+
+		// Get caret character position.
+		var selPos = getCaretPosition(targetElement);
+		var leftText = codeStr.slice(0, selPos.start);
+		var selText = codeStr.slice(selPos.start, selPos.end);
+		var rightText = codeStr.slice(selPos.end, codeStr.length);
+		if (selText == '') selText = "a";
+
+		// Set keyed text.
+		var processText = function processText(text) {
+			// Get array of [Character reference] or [Character] or [NewLine].
+			var m = escapeHTML(text).match(/((&amp;|&lt;|&gt;|&#34;|&#39;)|.|\n)/g);
+			if (m) return m.join('<wbr>').replace(/\n/g, '<br>');else return '';
+		};
+
+		// Set calculation text for in dummy text area.
+		dummyTextArea.innerHTML = processText(leftText) + '<wbr><span id="' + dummyName + '_i">' + processText(selText) + '</span><wbr>' + processText(rightText);
+
+		// Get caret absolutely pixel position.
+		var dummyTextAreaPos = getElementPosition(dummyTextArea);
+		var caretPos = getElementPosition(document.getElementById(dummyName + "_i"));
+		switch (mode) {
+			case 'self':
+				// Return absolutely pixel position - (0,0) is most top-left of TEXTAREA.
+				return { left: caretPos.left - dummyTextAreaPos.left, top: caretPos.top - dummyTextAreaPos.top };
+			case 'body':
+			case 'screen':
+			case 'stage':
+			case 'page':
+			default:
+				// Return absolutely pixel position - (0,0) is most top-left of PAGE.
+				return { left: textAreaPosition.left + caretPos.left - dummyTextAreaPos.left, top: textAreaPosition.top + caretPos.top - dummyTextAreaPos.top };
+		}
+	};
+}();
+
+var deviceName = 'unknown';
 var lastSendTime = 0;
-var cursor = 0;
+var lastJson = {};
+var caret = { start: 0, end: 0 };
 
-var textarea = document.querySelector('textarea');
+var textarea = document.querySelector('.textarea');
 
-var send = function send(text) {
+var getDeviceName = function getDeviceName() {
+	var url = '/getdevicename';
+	return fetch(url).then(function (res) {
+		return res.text();
+	}).then(function (res) {
+		deviceName = res;
+		console.log('device', res);
+	});
+};
+getDeviceName();
+
+var moveCarets = function moveCarets(ele, pos) {
+	caret.start = textarea.selectionStart;
+	caret.end = textarea.selectionEnd;
+
+	var coordinates = (0, _caretposition2.default)(textarea, pos);
+	ele.style.top = textarea.offsetTop - textarea.scrollTop + coordinates.top - 5 + 'px';
+	ele.style.left = textarea.offsetLeft - textarea.scrollLeft + coordinates.left + 'px';
+};
+
+var send = function send() {
+	var caretsArr = [];
+
+	if (JSON.stringify(lastJson) !== '{}') {
+		caretsArr = lastJson.carets.filter(function (c) {
+			return c.device !== deviceName;
+		});
+		// console.log('po', lastJson.carets, caretsArr)
+	}
+	caretsArr.push({
+		'device': deviceName,
+		'start': caret.start,
+		'end': caret.end
+	});
+
+	var caretElem = document.querySelector('.caret');
+	moveCarets(caretElem, textarea.selectionStart);
+
 	lastSendTime = getTimeStamp();
 	var sendObj = {
 		'time': lastSendTime,
-		'cursors': [{
-			'line': 1,
-			'column': 3
-		}],
-		'lines': text.split(/\r?\n/g).map(function (line, i) {
+		'carets': caretsArr,
+		'lines': textarea.value.split(/\r?\n/g).map(function (line, i) {
 			return {
 				num: i + 1,
 				text: line
 			};
 		}),
-		'device': 'MLOA-PC'
+		'device': deviceName
 	};
 	var url = '/send/';
 	return fetch(url, {
@@ -143,25 +349,24 @@ var getTimeStamp = function getTimeStamp() {
 	return Number('' + year + month + day + hour + min + sec + msec);
 };
 
+textarea.addEventListener('click', function (e) {
+	send();
+});
 textarea.addEventListener('keyup', function (e) {
-	cursorCol = textarea.selectionStart;
-	console.log('cursor', cursor);
-
-	var text = textarea.value;
-	send(text).then(function (res) {});
+	send();
 });
 
 (0, _timers.setInterval)(function () {
 	check().then(function (json) {
-		// console.log(json.time)
 		if (json.lines !== undefined) {
-			console.log(json.lines.map(function (line) {
+			console.log(json.device, json.lines.map(function (line) {
 				return line.text;
 			}).join('\n'));
 		}
 		if (lastSendTime < json.time) {
 			update(json.lines);
 		}
+		lastJson = json;
 	});
 }, 400);
 
@@ -638,6 +843,90 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
+
+/***/ }),
+/* 5 */,
+/* 6 */,
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var getCaretCoordinates = function getCaretCoordinates(element, position) {
+	var properties = ['boxSizing', 'width', // on Chrome and IE, exclude the scrollbar, so the mirror div wraps exactly as the textarea does
+	'height', 'overflowX', 'overflowY', // copy the scrollbar for IE
+
+	'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+
+	// https://developer.mozilla.org/en-US/docs/Web/CSS/font
+	'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch', 'fontSize', 'lineHeight', 'fontFamily', 'textAlign', 'textTransform', 'textIndent', 'textDecoration', // might not make a difference, but better be safe
+
+	'letterSpacing', 'wordSpacing'];
+
+	var isFirefox = !(window.mozInnerScreenX == null);
+	var mirrorDiv, computed, style;
+
+	// mirrored div
+	mirrorDiv = document.getElementById(element.nodeName + '--mirror-div');
+	if (!mirrorDiv) {
+		mirrorDiv = document.createElement('div');
+		mirrorDiv.id = element.nodeName + '--mirror-div';
+		document.body.appendChild(mirrorDiv);
+	}
+
+	style = mirrorDiv.style;
+	computed = getComputedStyle(element);
+
+	// default textarea styles
+	style.whiteSpace = 'pre-wrap';
+	if (element.nodeName !== 'INPUT') style.wordWrap = 'break-word'; // only for textarea-s
+
+	// position off-screen
+	style.position = 'absolute'; // required to return coordinates properly
+	style.top = element.offsetTop + parseInt(computed.borderTopWidth) + 'px';
+	style.left = "400px";
+	style.visibility = 'hidden'; // not 'display: none' because we want rendering
+
+	// transfer the element's properties to the div
+	properties.forEach(function (prop) {
+		style[prop] = computed[prop];
+	});
+
+	if (isFirefox) {
+		style.width = parseInt(computed.width) - 2 + 'px'; // Firefox adds 2 pixels to the padding - https://bugzilla.mozilla.org/show_bug.cgi?id=753662
+		// Firefox lies about the overflow property for textareas: https://bugzilla.mozilla.org/show_bug.cgi?id=984275
+		if (element.scrollHeight > parseInt(computed.height)) style.overflowY = 'scroll';
+	} else {
+		style.overflow = 'hidden'; // for Chrome to not render a scrollbar; IE keeps overflowY = 'scroll'
+	}
+
+	mirrorDiv.textContent = element.value.substring(0, position);
+	// the second special handling for input type="text" vs textarea: spaces need to be replaced with non-breaking spaces - http://stackoverflow.com/a/13402035/1269037
+	if (element.nodeName === 'INPUT') mirrorDiv.textContent = mirrorDiv.textContent.replace(/\s/g, '\xA0');
+
+	var span = document.createElement('span');
+	// Wrapping must be replicated *exactly*, including when a long word gets
+	// onto the next line, with whitespace at the end of the line before (#7).
+	// The  *only* reliable way to do that is to copy the *entire* rest of the
+	// textarea's content into the <span> created at the caret position.
+	// for inputs, just '.' would be enough, but why bother?
+	span.textContent = element.value.substring(position) || '.'; // || because a completely empty faux span doesn't render at all
+	span.style.backgroundColor = "lightgrey";
+	mirrorDiv.appendChild(span);
+
+	var coordinates = {
+		top: span.offsetTop + parseInt(computed['borderTopWidth']),
+		left: span.offsetLeft + parseInt(computed['borderLeftWidth'])
+	};
+
+	return coordinates;
+};
+
+exports.default = getCaretCoordinates;
 
 /***/ })
 /******/ ]);

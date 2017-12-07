@@ -3,6 +3,7 @@
 import express from 'express'
 import fetch from 'node-fetch'
 import bodyParser from 'body-parser'
+import os from 'os'
 
 const app = express()
 const port = 3000
@@ -16,7 +17,8 @@ app
     // extended: true
   }))
   .use(bodyParser.json())
-  .get('/', (req, res) => {
+  .get('/getdevicename', (req, res) => {
+    res.send(os.hostname())
   })
   .post('/send/', (req, res) => {
     const db = new sqlite3.Database(dbPath)
