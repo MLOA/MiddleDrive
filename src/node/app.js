@@ -20,7 +20,7 @@ app
     // console.log(req.body)
     return fetch(url, {
       method: 'POST',
-      body: req.body,
+      body: JSON.stringify(req.body),
       mode: 'cors',
     }).then(result => {
       return result.text()

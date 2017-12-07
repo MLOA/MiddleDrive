@@ -102,7 +102,7 @@ var send = function send(text) {
 	}).then(function (res) {
 		return res.text();
 	}).then(function (t) {
-		console.log('result: ' + t);
+		// console.log('result: ' + t)
 		// update(t)
 	});
 };

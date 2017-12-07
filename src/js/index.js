@@ -32,7 +32,7 @@ const send = text => {
 	}).then(res => {
 		return res.text()
 	}).then(t => {
-		console.log('result: ' + t)
+		// console.log('result: ' + t)
 		// update(t)
 	})
 }
