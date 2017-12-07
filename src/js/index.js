@@ -5,7 +5,26 @@ console.log('index')
 const textarea = document.querySelector('textarea')
 
 const send = text => {
-	const url = '/send/' + text
+	const textObj = text.split(/\r?\n/g).map((line, i) => {
+		return {
+			num: i + 1,
+			text: line
+		}
+	})
+
+	const sendObj = {
+		'time': '20171208120000',
+		'cursors': [
+			{
+				'line': 1,
+				'column': 3
+			}
+		],
+		'lines': textObj,
+		'device': 'MLOA-PC'
+	}
+
+	const url = '/send/' + JSON.stringify(sendObj)
 	return fetch(url, {
 		method: 'GET',
 		mode: 'cors'
@@ -18,7 +37,7 @@ const send = text => {
 }
 
 const update = str => {
-	textarea.value = str
+	// textarea.value = str
 }
 
 const check = () => {
@@ -27,9 +46,9 @@ const check = () => {
 		method: 'GET',
 		mode: 'cors'
 	}).then(res => {
-		return res.json()
+		return res.text()
 	}).then(data => {
-		update(data.text)
+		// update(t)
 		console.log('result', data)
 	})
 }

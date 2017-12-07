@@ -23,32 +23,11 @@ app
   })
   .get('/check/', (req, res) => {
     const sqlite3 = require('sqlite3').verbose()
-    const db = new sqlite3.Database(process.cwd() + '/visualstudio/client/ConsoleApp2/bin/Debug/middle_drive.db')
+    const db = new sqlite3.Database(process.cwd() + '/visualstudio/server/ConsoleApp3/bin/Debug/middle_drive.db')
     db.serialize(() => {
       const sql = 'SELECT * FROM text WHERE id = (select max(id) from text)'
       db.all(sql, (err, rows) => {
-        const rowsObj = rows.map(row => {
-          const textObj = decodeURIComponent(row.text).split(/\r?\n/g)
-            .map((text, i) => {
-              return {
-                'line': i + 1,
-                'text': text
-              }
-            })
-
-          return {
-            'time': '20171208120000',
-            'cursors': [
-              {
-                'line': 1,
-                'column': 3
-              }
-            ],
-            'lines': textObj,
-            'device': 'MLOA-PC'
-          }
-        })
-        res.send(rowsObj[0])
+        res.send(rows[0].line)
       })
     })
     db.close()

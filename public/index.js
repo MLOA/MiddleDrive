@@ -77,7 +77,24 @@ console.log('index');
 var textarea = document.querySelector('textarea');
 
 var send = function send(text) {
-	var url = '/send/' + text;
+	var textObj = text.split(/\r?\n/g).map(function (line, i) {
+		return {
+			num: i + 1,
+			text: line
+		};
+	});
+
+	var sendObj = {
+		'time': '20171208120000',
+		'cursors': [{
+			'line': 1,
+			'column': 3
+		}],
+		'lines': textObj,
+		'device': 'MLOA-PC'
+	};
+
+	var url = '/send/' + JSON.stringify(sendObj);
 	return fetch(url, {
 		method: 'GET',
 		mode: 'cors'
@@ -90,7 +107,7 @@ var send = function send(text) {
 };
 
 var update = function update(str) {
-	textarea.value = str;
+	// textarea.value = str
 };
 
 var check = function check() {
@@ -99,9 +116,9 @@ var check = function check() {
 		method: 'GET',
 		mode: 'cors'
 	}).then(function (res) {
-		return res.json();
+		return res.text();
 	}).then(function (data) {
-		update(data.text);
+		// update(t)
 		console.log('result', data);
 	});
 };
