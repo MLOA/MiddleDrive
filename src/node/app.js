@@ -26,6 +26,9 @@ app
       db.run('INSERT INTO text(line, datetime) VALUES (?, ?)',
         [JSON.stringify(req.body), req.body.time],
         err => {
+          res.send('{}')
+          db.close()
+
           if (err !== null) console.log(err)
           const url = 'http://localhost:8000/'
 
@@ -36,11 +39,12 @@ app
           }).then(result => {
             return result.text()
           }).then(text => {
-            res.send(text)
+            // res.send(text)
+          }).catch(error => {
+            // res.send(error.message)
           })
         })
     })
-    db.close()
   })
   .get('/check/', (req, res) => {
     const db = new sqlite3.Database(dbPath)

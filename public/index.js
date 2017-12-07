@@ -72,7 +72,7 @@
 
 var _timers = __webpack_require__(1);
 
-var _caretposition = __webpack_require__(7);
+var _caretposition = __webpack_require__(5);
 
 var _caretposition2 = _interopRequireDefault(_caretposition);
 
@@ -255,6 +255,12 @@ var getDeviceName = function getDeviceName() {
 		return res.text();
 	}).then(function (res) {
 		deviceName = res;
+		var setDeviceNameToMyCaret = function setDeviceNameToMyCaret() {
+			var myCaret = document.querySelector('.caret');
+			myCaret.setAttribute('device-name', deviceName);
+			myCaret.querySelector('.device-name').textContent = deviceName;
+		};
+		setDeviceNameToMyCaret();
 		console.log('device', res);
 	});
 };
@@ -263,29 +269,27 @@ getDeviceName();
 var moveCarets = function moveCarets(ele, pos) {
 	caret.start = textarea.selectionStart;
 	caret.end = textarea.selectionEnd;
-
 	var coordinates = (0, _caretposition2.default)(textarea, pos);
 	ele.style.top = textarea.offsetTop - textarea.scrollTop + coordinates.top - 5 + 'px';
 	ele.style.left = textarea.offsetLeft - textarea.scrollLeft + coordinates.left + 'px';
 };
 
 var send = function send() {
+	var caretElem = document.querySelector('.caret');
+	moveCarets(caretElem, textarea.selectionStart);
+
 	var caretsArr = [];
 
 	if (JSON.stringify(lastJson) !== '{}') {
 		caretsArr = lastJson.carets.filter(function (c) {
 			return c.device !== deviceName;
 		});
-		// console.log('po', lastJson.carets, caretsArr)
 	}
 	caretsArr.push({
 		'device': deviceName,
 		'start': caret.start,
 		'end': caret.end
 	});
-
-	var caretElem = document.querySelector('.caret');
-	moveCarets(caretElem, textarea.selectionStart);
 
 	lastSendTime = getTimeStamp();
 	var sendObj = {
@@ -358,22 +362,49 @@ textarea.addEventListener('keyup', function (e) {
 
 (0, _timers.setInterval)(function () {
 	check().then(function (json) {
+		console.log(json);
+
+		if (JSON.stringify(json) === '{}') return;
+
 		if (json.lines !== undefined) {
-			console.log(json.device, json.lines.map(function (line) {
-				return line.text;
-			}).join('\n'));
+			// console.log(json.device, json.lines.map(line => line.text).join('\n'))
 		}
 		if (lastSendTime < json.time) {
 			update(json.lines);
 		}
 		lastJson = json;
+
+		var carets = document.querySelectorAll('.caret');
+		if (json.carets !== undefined) {
+			json.carets.forEach(function (c) {
+				var existed = false;
+				carets.forEach(function (caretElem) {
+					var deviceName = caretElem.getAttribute('device-name');
+					if (deviceName === c.device) {
+						// move
+						existed = true;
+						moveCarets(caretElem, c.start);
+					}
+				});
+				if (!existed) {
+					// add
+					var newDevice = document.createElement('span');
+					newDevice.classList.add('device-name');
+					newDevice.textContent = c.device;
+					var newFlag = document.createElement('div');
+					newFlag.classList.add('flag');
+					newFlag.appendChild(newDevice);
+					var newCaret = document.createElement('div');
+					newCaret.classList.add('caret');
+					newCaret.setAttribute('device-name', c.device);
+					newCaret.appendChild(newFlag);
+					moveCarets(newCaret, c.start);
+					document.querySelector('.container').appendChild(newCaret);
+				}
+			});
+		}
 	});
 }, 400);
-
-var checkButton = document.querySelector('.check');
-checkButton.addEventListener('click', function (e) {
-	check();
-});
 
 /***/ }),
 /* 1 */
@@ -845,9 +876,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

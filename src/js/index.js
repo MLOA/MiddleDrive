@@ -185,6 +185,12 @@ const getDeviceName = () => {
 		return res.text()
 	}).then(res => {
 		deviceName = res
+		const setDeviceNameToMyCaret = () => {
+			const myCaret = document.querySelector('.caret')
+			myCaret.setAttribute('device-name', deviceName)
+			myCaret.querySelector('.device-name').textContent = deviceName
+		}
+		setDeviceNameToMyCaret()
 		console.log('device', res)
 	})
 }
@@ -193,7 +199,6 @@ getDeviceName()
 const moveCarets = (ele, pos) => {
 	caret.start = textarea.selectionStart
 	caret.end = textarea.selectionEnd
-
 	const coordinates = getCaretCoordinates(textarea, pos)
 	ele.style.top =
 		textarea.offsetTop
@@ -209,22 +214,21 @@ const moveCarets = (ele, pos) => {
 }
 
 const send = () => {
+	const caretElem = document.querySelector('.caret')
+	moveCarets(caretElem, textarea.selectionStart)
+
 	let caretsArr = []
 
 	if (JSON.stringify(lastJson) !== '{}') {
 		caretsArr = lastJson.carets.filter(c => {
 			return (c.device !== deviceName)
 		})
-		// console.log('po', lastJson.carets, caretsArr)
 	}
 	caretsArr.push({
 		'device': deviceName,
 		'start': caret.start,
 		'end': caret.end
 	})
-
-	const caretElem = document.querySelector('.caret')
-	moveCarets(caretElem, textarea.selectionStart)
 
 	lastSendTime = getTimeStamp()
 	const sendObj = {
@@ -295,17 +299,44 @@ textarea.addEventListener('keyup', e => {
 
 setInterval(() => {
 	check().then(json => {
+		console.log(json)
+
+		if (JSON.stringify(json) === '{}') return
+
 		if (json.lines !== undefined) {
-			console.log(json.device, json.lines.map(line => line.text).join('\n'))
+			// console.log(json.device, json.lines.map(line => line.text).join('\n'))
 		}
 		if (lastSendTime < json.time) {
 			update(json.lines)
 		}
 		lastJson = json
+
+		const carets = document.querySelectorAll('.caret')
+		if (json.carets !== undefined) {
+			json.carets.forEach(c => {
+				let existed = false
+				carets.forEach(caretElem => {
+					const deviceName = caretElem.getAttribute('device-name')
+					if (deviceName === c.device) {	// move
+						existed = true
+						moveCarets(caretElem, c.start)
+					}
+				})
+				if (!existed) {	// add
+					const newDevice = document.createElement('span')
+					newDevice.classList.add('device-name')
+					newDevice.textContent = c.device
+					const newFlag = document.createElement('div')
+					newFlag.classList.add('flag')
+					newFlag.appendChild(newDevice)
+					const newCaret = document.createElement('div')
+					newCaret.classList.add('caret')
+					newCaret.setAttribute('device-name', c.device)
+					newCaret.appendChild(newFlag)
+					moveCarets(newCaret, c.start)
+					document.querySelector('.container').appendChild(newCaret)
+				}
+			})
+		}
 	})
 }, 400)
-
-const checkButton = document.querySelector('.check')
-checkButton.addEventListener('click', e => {
-	check()
-})
