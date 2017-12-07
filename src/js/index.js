@@ -43,3 +43,8 @@ textarea.addEventListener('keyup', e => {
 setInterval(() => {
 	check()
 }, 500)
+
+const checkButton = document.querySelector('.check')
+checkButton.addEventListener('click', e => {
+	check()
+})

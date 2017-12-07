@@ -116,6 +116,11 @@ textarea.addEventListener('keyup', function (e) {
 	check();
 }, 500);
 
+var checkButton = document.querySelector('.check');
+checkButton.addEventListener('click', function (e) {
+	check();
+});
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
