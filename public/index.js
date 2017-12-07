@@ -92,7 +92,6 @@ var send = function send(text) {
 		}),
 		'device': 'MLOA-PC'
 	};
-	console.log(text);
 	var url = '/send/';
 	return fetch(url, {
 		method: 'POST',
@@ -148,6 +147,9 @@ textarea.addEventListener('keyup', function (e) {
 
 (0, _timers.setInterval)(function () {
 	check().then(function (json) {
+		console.log(json.lines.map(function (line) {
+			return line.text;
+		}).join('\n'));
 		if (lastSendTime < json.time) {
 			update(json.lines);
 		}

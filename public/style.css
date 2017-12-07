@@ -42,4 +42,5 @@ body main {
 body main textarea {
 	resize: none;
 	width: 100%;
+	height: 40vh;
 }

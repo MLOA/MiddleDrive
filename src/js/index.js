@@ -22,7 +22,6 @@ const send = text => {
 		}),
 		'device': 'MLOA-PC'
 	}
-	console.log(text)
 	const url = '/send/'
 	return fetch(url, {
 		method: 'POST',
@@ -78,6 +77,7 @@ textarea.addEventListener('keyup', e => {
 
 setInterval(() => {
 	check().then(json => {
+		console.log(json.lines.map(line => line.text).join('\n'))
 		if (lastSendTime < json.time) {
 			update(json.lines)
 		}

@@ -23,7 +23,7 @@ namespace ConsoleApp2 {
                 con.Open();
 
                 using (var cmd = con.CreateCommand()) {
-                    cmd.CommandText = "CREATE TABLE IF NOT EXISTS text(ID INTEGER PRIMARY KEY AUTOINCREMENT, datetime DATETIME, line TEXT) ";
+                    cmd.CommandText = "CREATE TABLE IF NOT EXISTS text(ID INTEGER PRIMARY KEY AUTOINCREMENT, datetime INT, line TEXT) ";
                     cmd.ExecuteNonQuery();
                 }
             }
