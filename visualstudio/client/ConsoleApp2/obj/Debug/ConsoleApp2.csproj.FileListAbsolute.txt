@@ -213,3 +213,4 @@ C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\De
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.csproj.CoreCompileInputs.cache
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.exe
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.pdb
+C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\bin\Debug\ConsoleApp2.pdb
