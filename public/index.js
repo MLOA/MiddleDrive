@@ -106,8 +106,11 @@ var send = function send(text) {
 	});
 };
 
-var update = function update(str) {
-	// textarea.value = str
+var update = function update(arr) {
+	var t = arr.map(function (line) {
+		return line.text;
+	}).join('\n');
+	textarea.value = t;
 };
 
 var check = function check() {
@@ -118,8 +121,10 @@ var check = function check() {
 	}).then(function (res) {
 		return res.text();
 	}).then(function (data) {
-		// update(t)
-		console.log('result', data);
+		var decodedText = decodeURI(data);
+		var json = JSON.parse(decodedText);
+		update(json.lines);
+		console.log('result', json);
 	});
 };
 

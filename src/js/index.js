@@ -36,8 +36,9 @@ const send = text => {
 	})
 }
 
-const update = str => {
-	// textarea.value = str
+const update = arr => {
+	const t = arr.map(line => line.text).join('\n')
+	textarea.value = t
 }
 
 const check = () => {
@@ -48,8 +49,10 @@ const check = () => {
 	}).then(res => {
 		return res.text()
 	}).then(data => {
-		// update(t)
-		console.log('result', data)
+		const decodedText = decodeURI(data)
+		const json = JSON.parse(decodedText)
+		update(json.lines)
+		console.log('result', json)
 	})
 }
 
