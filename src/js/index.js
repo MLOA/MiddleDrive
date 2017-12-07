@@ -1,6 +1,7 @@
 import { setInterval } from "timers"
 
-console.log('index')
+let lastSendTime = 0
+let cursor = 0
 
 const textarea = document.querySelector('textarea')
 
@@ -36,8 +37,12 @@ const send = text => {
 }
 
 const update = arr => {
-	const t = arr.map(line => line.text).join('\n')
-	textarea.value = t
+	if (arr !== undefined) {
+		const t = arr.map(line => line.text).join('\n')
+		textarea.value = t
+	} else {
+		console.log('#update: arr is undefined')
+	}
 }
 
 const check = () => {
@@ -66,9 +71,10 @@ const getTimeStamp = () => {
 	return Number(`${year}${month}${day}${hour}${min}${sec}${msec}`)
 }
 
-let lastSendTime = 0
-
 textarea.addEventListener('keyup', e => {
+	cursorCol = textarea.selectionStart
+	console.log('cursor', cursor)
+
 	const text = textarea.value
 	send(text).then(res => {
 
@@ -77,7 +83,10 @@ textarea.addEventListener('keyup', e => {
 
 setInterval(() => {
 	check().then(json => {
-		console.log(json.lines.map(line => line.text).join('\n'))
+		// console.log(json.time)
+		if (json.lines !== undefined) {
+			console.log(json.lines.map(line => line.text).join('\n'))
+		}
 		if (lastSendTime < json.time) {
 			update(json.lines)
 		}

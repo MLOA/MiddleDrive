@@ -67,7 +67,7 @@ namespace ConsoleApp2 {
             writer = new DataWriter(_socket.OutputStream);
             reader = new DataReader(_socket.InputStream);
             Console.WriteLine(_service.ConnectionHostName.ToString());
-            Console.WriteLine("メッセージを入力してください");
+            Console.WriteLine("connected");
             receive();
 
             try {
@@ -79,7 +79,7 @@ namespace ConsoleApp2 {
                     var res = context.Response;
                     var req = context.Request;
                     var param = "";
-                    using (var reader = new StreamReader(req.InputStream, req.ContentEncoding)) {
+                    using (var reader = new StreamReader(req.InputStream, Encoding.GetEncoding("utf-8"))) {
                         param = reader.ReadToEnd();
                     }
 
@@ -114,7 +114,9 @@ namespace ConsoleApp2 {
 
                     using (var cmd = con.CreateCommand()) {
                         cmd.CommandText = "INSERT INTO text (datetime, line) VALUES (@p_datetime, @p_line)";
-                        cmd.Parameters.Add(new SQLiteParameter("@p_datetime", DateTime.Now.ToLongTimeString()));
+                        var time = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        cmd.Parameters.Add(new SQLiteParameter("@p_datetime", time));
+                        //text2 = Encoding.UTF8.GetString(Encoding.GetEncoding("").GetBytes(text2));
                         cmd.Parameters.Add(new SQLiteParameter("@p_line", text2));
                         cmd.ExecuteNonQuery();
                     }

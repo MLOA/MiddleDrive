@@ -209,7 +209,6 @@ C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\bin\De
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\bin\Debug\System.Data.SQLite.dll.config
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\bin\Debug\System.Runtime.WindowsRuntime.xml
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\bin\Debug\System.Runtime.WindowsRuntime.UI.Xaml.xml
-C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.csprojResolveAssemblyReference.cache
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.csproj.CoreCompileInputs.cache
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.exe
 C:\Users\hiroaki\Documents\Middolle-Drive\visualstudio\client\ConsoleApp2\obj\Debug\ConsoleApp2.pdb

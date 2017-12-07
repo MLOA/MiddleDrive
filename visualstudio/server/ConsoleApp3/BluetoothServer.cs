@@ -56,13 +56,6 @@ namespace MiddleDriveServer {
         }
 
         async void sendHello() {
-            var text = "Hello";
-            Console.WriteLine("W:" + text);
-            var buff = Encoding.UTF8.GetBytes(text);
-            writer.WriteInt32(buff.Length);
-            writer.WriteString(text);
-            await writer.StoreAsync();
-
             try {
                 HttpListener httplistener = new HttpListener();
                 httplistener.Prefixes.Add("http://localhost:8000/");
@@ -72,7 +65,7 @@ namespace MiddleDriveServer {
                     var res = context.Response;
                     var req = context.Request;
                     var param = "";
-                    using (var reader = new StreamReader(req.InputStream, req.ContentEncoding)) {
+                    using (var reader = new StreamReader(req.InputStream, Encoding.GetEncoding("utf-8"))) {
                         param = reader.ReadToEnd();
                     }
 
@@ -87,6 +80,7 @@ namespace MiddleDriveServer {
 
         async void receive() {
             try {
+                reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
                 await reader.LoadAsync(sizeof(int));
                 var length = reader.ReadInt32();
                 await reader.LoadAsync((uint)length);
@@ -97,7 +91,8 @@ namespace MiddleDriveServer {
 
                     using (var cmd = con.CreateCommand()) {
                         cmd.CommandText = "INSERT INTO text (datetime, line) VALUES (@p_datetime, @p_line)";
-                        cmd.Parameters.Add(new SQLiteParameter("@p_datetime", DateTime.Now.ToLongTimeString()));
+                        var time = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        cmd.Parameters.Add(new SQLiteParameter("@p_datetime", time));
                         cmd.Parameters.Add(new SQLiteParameter("@p_line", text2));
                         cmd.ExecuteNonQuery();
                     }

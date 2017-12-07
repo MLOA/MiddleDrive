@@ -72,7 +72,8 @@
 
 var _timers = __webpack_require__(1);
 
-console.log('index');
+var lastSendTime = 0;
+var cursor = 0;
 
 var textarea = document.querySelector('textarea');
 
@@ -106,10 +107,14 @@ var send = function send(text) {
 };
 
 var update = function update(arr) {
-	var t = arr.map(function (line) {
-		return line.text;
-	}).join('\n');
-	textarea.value = t;
+	if (arr !== undefined) {
+		var t = arr.map(function (line) {
+			return line.text;
+		}).join('\n');
+		textarea.value = t;
+	} else {
+		console.log('#update: arr is undefined');
+	}
 };
 
 var check = function check() {
@@ -138,18 +143,22 @@ var getTimeStamp = function getTimeStamp() {
 	return Number('' + year + month + day + hour + min + sec + msec);
 };
 
-var lastSendTime = 0;
-
 textarea.addEventListener('keyup', function (e) {
+	cursorCol = textarea.selectionStart;
+	console.log('cursor', cursor);
+
 	var text = textarea.value;
 	send(text).then(function (res) {});
 });
 
 (0, _timers.setInterval)(function () {
 	check().then(function (json) {
-		console.log(json.lines.map(function (line) {
-			return line.text;
-		}).join('\n'));
+		// console.log(json.time)
+		if (json.lines !== undefined) {
+			console.log(json.lines.map(function (line) {
+				return line.text;
+			}).join('\n'));
+		}
 		if (lastSendTime < json.time) {
 			update(json.lines);
 		}

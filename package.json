@@ -36,7 +36,9 @@
     "watch:pug": "npm run build:pug -- -w",
     "watch:postcss": "npm run build:postcss -- -w",
     "start": "nodemon dist/app",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "server": "visualstudio/server/ConsoleApp3/bin/Debug/MiddleDriveServer.exe",
+    "client": "visualstudio/client/ConsoleApp2/bin/Debug/ConsoleApp2.exe"
   },
   "author": "MLOA",
   "license": "MIT",

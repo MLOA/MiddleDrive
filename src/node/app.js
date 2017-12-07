@@ -8,7 +8,7 @@ const app = express()
 const port = 3000
 
 const sqlite3 = require('sqlite3').verbose()
-const dbPath = process.cwd() + '/visualstudio/server/ConsoleApp3/bin/Debug/middle_drive.db'
+const dbPath = process.cwd() + '/middle_drive.db'
 
 app
   .use(express.static('public'))
@@ -27,17 +27,15 @@ app
           if (err !== null) console.log(err)
           const url = 'http://localhost:8000/'
 
-          // return fetch(url, {
-          //   method: 'POST',
-          //   body: JSON.stringify(req.body),
-          //   mode: 'cors',
-          // }).then(result => {
-          //   return result.text()
-          // }).then(text => {
-          //   res.send(text)
-          // })
-
-          res.send('')
+          return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(req.body),
+            mode: 'cors',
+          }).then(result => {
+            return result.text()
+          }).then(text => {
+            res.send(text)
+          })
         })
     })
     db.close()
@@ -47,8 +45,11 @@ app
     db.serialize(() => {
       const sql = 'SELECT * FROM text WHERE datetime = (select max(datetime) from text)'
       db.all(sql, (err, rows) => {
-        if (rows.length === 0) res.send('{}')
-        else res.send(rows[0].line)
+        if (err !== null) console.log(err)
+        else {
+          if (rows.length === 0) res.send('{}')
+          else res.send(rows[0].line)
+        }
       })
     })
     db.close()
