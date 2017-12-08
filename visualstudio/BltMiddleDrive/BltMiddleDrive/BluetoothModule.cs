@@ -54,6 +54,7 @@ namespace BltMiddleDrive {
         }
 
         async void Requested(IAsyncResult result) {
+            Console.WriteLine("requested");
             var listener = (HttpListener)result.AsyncState;
             var context = listener.EndGetContext(result);
             var res = context.Response;
@@ -64,6 +65,7 @@ namespace BltMiddleDrive {
             }
             res.StatusCode = 200;
             res.Close();
+            listener.BeginGetContext(Requested, listener);
         }
 
 
