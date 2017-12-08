@@ -69,7 +69,9 @@ namespace BltMiddleDrive {
 
 
         async Task InitBluetoothServer() {
+            Console.WriteLine(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.ObexObjectPush));
             var _provider = await RfcommServiceProvider.CreateAsync(RfcommServiceId.ObexObjectPush);
+            Console.WriteLine(RfcommServiceId.ObexObjectPush.AsString());
             StreamSocketListener listener = new StreamSocketListener();
             listener.ConnectionReceived += OnConnectionReceived;
             await listener.BindServiceNameAsync(_provider.ServiceId.AsString(), SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
@@ -99,6 +101,7 @@ namespace BltMiddleDrive {
         //}
 
         public async Task InitBluetoothClient() {
+            Console.WriteLine(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.ObexObjectPush));
             var informations = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelector());
 
             foreach (var info in informations) {
@@ -121,9 +124,7 @@ namespace BltMiddleDrive {
             var _service = rfcommServices.Services[0];
 
             var services =
-            await DeviceInformation.FindAllAsync(
-                RfcommDeviceService.GetDeviceSelector(
-                    RfcommServiceId.ObexObjectPush));
+            await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.ObexObjectPush));
 
             if (services.Count != 0) {
                 _service = await RfcommDeviceService.FromIdAsync(services[0].Id);
