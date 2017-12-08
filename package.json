@@ -39,8 +39,8 @@
     "watch:postcss": "npm run build:postcss -- -w",
     "start": "nodemon dist/app",
     "clean": "rm -rf dist",
-    "server": "visualstudio/server/ConsoleApp3/bin/Debug/MiddleDriveServer.exe",
-    "client": "visualstudio/client/ConsoleApp2/bin/Debug/ConsoleApp2.exe"
+    "server": "visualstudio/BltMiddleDrive/BltMiddleDrive/bin/Debug/BltMiddleDrive.exe -server",
+    "client": "visualstudio/BltMiddleDrive/BltMiddleDrive/bin/Debug/BltMiddleDrive.exe"
   },
   "author": "MLOA",
   "license": "MIT",
