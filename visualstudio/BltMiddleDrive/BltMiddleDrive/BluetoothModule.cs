@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
@@ -71,26 +73,27 @@ namespace BltMiddleDrive {
             listener.ConnectionReceived += OnConnectionReceived;
             await listener.BindServiceNameAsync(provider.ServiceId.AsString(), SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
             provider.StartAdvertising(listener);
-            Console.WriteLine("done!");
+            Console.WriteLine("running!");
         }
 
         async Task InitBluetoothClient() {
-            var devInfos = await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.ObexObjectPush));
-            if (devInfos.Count == 0) {
-                Console.WriteLine("サービスが見つかりませんでした");
-                return;
-            }
+            var devInfos = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelector());
 
             foreach (var devInfo in devInfos) {
-                var service = await RfcommDeviceService.FromIdAsync(devInfo.Id);
-                var socket = new StreamSocket();
-                await socket.ConnectAsync(service.ConnectionHostName, service.ConnectionServiceName, SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
-                StartStream(socket);
+                var bluetoothDevice = await BluetoothDevice.FromIdAsync(devInfo.Id);
+                var rfcommDeviceServices = await bluetoothDevice.GetRfcommServicesAsync();
+                if(rfcommDeviceServices.Services.Count != 0) {
+                    var service = rfcommDeviceServices.Services[0];
+                    var socket = new StreamSocket();
+                    await socket.ConnectAsync(service.ConnectionHostName, service.ConnectionServiceName, SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
+                    StartStream(socket);
+                }
             }
-            Console.WriteLine("done!");
+            Console.WriteLine("running!");
         }
 
         void OnConnectionReceived(StreamSocketListener listener, StreamSocketListenerConnectionReceivedEventArgs args) {
+            Console.WriteLine("connected");
             StartStream(args.Socket);
         }
 
