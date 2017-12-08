@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -132,6 +131,7 @@ namespace BltMiddleDrive {
         }
 
         async Task Send(String text) {
+            Console.WriteLine(text);
             var buff = Encoding.UTF8.GetBytes(text);
             foreach (DataWriter writer in writers) {
                 writer.WriteInt32(buff.Length);
