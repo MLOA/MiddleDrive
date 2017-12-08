@@ -3130,7 +3130,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var riot = __webpack_require__(0);
 
-riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{deviceName in otherDevices}"> <div class="icon"></div><span class="device-name-view">{deviceName}</span> </div> </header> <div class="container"> <textarea ref="textarea" click="{textareaMouseUpped}" keyup="{textareaKeyUpped}"></textarea> <div class="position-mark"></div> <div class="position-mark"></div> <div class="position-mark"></div> <div class="position-mark"></div> <div class="caret" ref="myCaret" device-name="{deviceName}"> <div class="flag"><span class="device-name">{deviceName}</span></div> </div> </div>', '', '', function (opts) {
+riot.tag2('app', '<header> <div class="logo"><img src="/img/middle-drive-logo.svg"></div> <h1>MiddleDrive</h1> <div class="device-view" each="{deviceName in otherDevices}"> <div class="icon"></div><span class="device-name-view">{deviceName}</span> </div> </header> <div class="container"> <textarea ref="textarea" click="{textareaMouseUpped}" keyup="{textareaKeyUpped}"></textarea> <div class="position-mark"></div> <div class="position-mark"></div> <div class="position-mark"></div> <div class="position-mark"></div> <div class="caret" ref="myCaret" device-name="{deviceName}"> <div class="flag"><span class="device-name">{deviceName}</span></div> </div> </div>', '', '', function (opts) {
     var _this = this;
 
     this.deviceName = this.opts.deviceName;
@@ -3218,6 +3218,7 @@ riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{
                     update(json.lines);
                     _this2.refs.textarea.selectionStart = _this2.caret.start;
                     _this2.refs.textarea.selectionEnd = _this2.caret.end;
+                    _this2.send();
                 }
                 _this2.lastJson = json;
 

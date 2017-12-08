@@ -28,6 +28,15 @@ body {
 			align-items: center;
 			color: white;
 			box-shadow:0px 0px 8px 0px #080808;
+			& .logo {
+				$logoWidth: 3rem;
+				width: $logoWidth;
+				height: $logoWidth;
+				& img {
+					width: 100%;
+					height: 100%;
+				}
+			}
 			& h1 {
 				flex-grow: 1;
 				font-weight: 300;

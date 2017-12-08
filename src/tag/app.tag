@@ -1,5 +1,7 @@
 app
 	header
+		.logo
+			img(src='/img/middle-drive-logo.svg')
 		h1 MiddleDrive
 		.device-view(each='{deviceName in otherDevices}')
 			.icon
@@ -112,6 +114,7 @@ app
 						update(json.lines)
 						this.refs.textarea.selectionStart = this.caret.start
 						this.refs.textarea.selectionEnd = this.caret.end
+						this.send()
 					}
 					this.lastJson = json
 
