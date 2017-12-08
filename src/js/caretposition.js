@@ -56,7 +56,7 @@ const getCaretCoordinates = function (element, position) {
 	// position off-screen
 	style.position = 'absolute';  // required to return coordinates properly
 	style.top = element.offsetTop + parseInt(computed.borderTopWidth) + 'px';
-	style.left = "400px";
+	style.left = "0px";
 	style.visibility = 'hidden';  // not 'display: none' because we want rendering
 
 	// transfer the element's properties to the div

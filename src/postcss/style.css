@@ -10,22 +10,22 @@ body, p, h1 {
 
 body {
 	background: $baseColor;
-	font-family: 'Roboto',-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI","Noto Sans Japanese","ヒラギノ角ゴ ProN W3", Meiryo, sans-serif;
-	& header {
-		background: gray;
-		padding: .5rem 1rem;
-		display: flex;
-		align-items: center;
-		color: white;
-		/* box-shadow */
-		box-shadow:0px 0px 6px 0px #b4b4b0;
-		& h1 {
-			flex-grow: 1;
-			font-weight: 500;
-		}
-	}
+	font-family: 'Roboto', -apple-system, BlinkMacSystemFont,
+	'Helvetica Neue', 'Segoe UI','Noto Sans Japanese',
+	'ヒラギノ角ゴ ProN W3', Meiryo, sans-serif;
 	& main {
-		margin: 1rem;
+		& header {
+			background: gray;
+			padding: 0.5rem 1rem;
+			display: flex;
+			align-items: center;
+			color: white;
+			box-shadow:0px 0px 6px 0px #b4b4b0;
+			& h1 {
+				flex-grow: 1;
+				font-weight: 300;
+			}
+		}
 		& .container {
 			// position: relative;
 			width: 100%;

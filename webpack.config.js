@@ -12,7 +12,13 @@ module.exports = [{
 	},
 	module: {
 		loaders: [{
-			test: /\.js$/,
+			test: /\.tag$/,
+			enforce: 'pre',
+			exclude: /node_modules/,
+			loader: 'tag-pug-loader'
+		},{
+			test: /\.js|\.tag$/,
+			enforce: 'post',
 			exclude: /node_modules/,
 			use: {
 				loader: 'babel-loader',
@@ -23,7 +29,7 @@ module.exports = [{
 		}]
 	},
 	resolve: {
-		extensions: ['.js']
+		extensions: ['.js', '.tag']
 	},
 	plugins: [
 	]
