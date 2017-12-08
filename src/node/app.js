@@ -13,9 +13,7 @@ const dbPath = process.cwd() + '/middle_drive.db'
 
 app
   .use(express.static('public'))
-  .use(bodyParser.urlencoded({
-    // extended: true
-  }))
+  .use(bodyParser.urlencoded())
   .use(bodyParser.json())
   .get('/getdevicename', (req, res) => {
     res.send(os.hostname())

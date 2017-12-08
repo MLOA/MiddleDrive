@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -3029,180 +3029,231 @@ Object.defineProperty(exports, '__esModule', { value: true });
 "use strict";
 
 
-var _caretposition = __webpack_require__(2);
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-var _caretposition2 = _interopRequireDefault(_caretposition);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _getTimeStamp = __webpack_require__(4);
+var API = function () {
+	function API() {
+		_classCallCheck(this, API);
+	}
 
-var _getTimeStamp2 = _interopRequireDefault(_getTimeStamp);
+	API.check = function check() {
+		var url = '/check/';
+		return fetch(url, {
+			method: 'GET',
+			mode: 'cors'
+		}).then(function (res) {
+			return res.text();
+		}).then(function (data) {
+			var decodedText = decodeURI(data);
+			var json = JSON.parse(decodedText);
+			return json;
+		});
+	};
 
-var _app = __webpack_require__(3);
+	API.getDeviceName = function getDeviceName() {
+		var url = '/getdevicename/';
+		return fetch(url).then(function (res) {
+			return res.text();
+		});
+	};
 
-var _app2 = _interopRequireDefault(_app);
+	API.send = function send(sendObj) {
+		var url = '/send/';
+		return fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(sendObj),
+			mode: 'cors'
+		}).then(function (res) {
+			return res.text();
+		});
+	};
+
+	return API;
+}();
+
+exports.default = API;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 var _riot = __webpack_require__(0);
 
 var _riot2 = _interopRequireDefault(_riot);
 
+var _api = __webpack_require__(1);
+
+var _api2 = _interopRequireDefault(_api);
+
+var _app = __webpack_require__(3);
+
+var _app2 = _interopRequireDefault(_app);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_riot2.default.mount('main', 'app');
-
-var deviceName = 'unknown';
-var lastSendTime = 0;
-var lastJson = {};
-var caret = { start: 0, end: 0 };
-
-var textarea = document.querySelector('.textarea');
-
-var getDeviceName = function getDeviceName() {
-	var url = '/getdevicename';
-	return fetch(url).then(function (res) {
-		return res.text();
-	}).then(function (res) {
-		deviceName = res;
-		var setDeviceNameToMyCaret = function setDeviceNameToMyCaret() {
-			var myCaret = document.querySelector('.caret');
-			myCaret.setAttribute('device-name', deviceName);
-			myCaret.querySelector('.device-name').textContent = deviceName;
-		};
-		setDeviceNameToMyCaret();
-		console.log('device', res);
+_api2.default.getDeviceName().then(function (res) {
+	_riot2.default.mount('main', 'app', {
+		deviceName: res
 	});
-};
-getDeviceName();
-
-var moveCarets = function moveCarets(ele, pos) {
-	caret.start = textarea.selectionStart;
-	caret.end = textarea.selectionEnd;
-	var coordinates = (0, _caretposition2.default)(textarea, pos);
-	ele.style.top = textarea.offsetTop - textarea.scrollTop + coordinates.top - 5 + 'px';
-	ele.style.left = textarea.offsetLeft - textarea.scrollLeft + coordinates.left + 'px';
-};
-
-var send = function send() {
-	var caretElem = document.querySelector('.caret');
-	moveCarets(caretElem, textarea.selectionStart);
-
-	var caretsArr = [];
-
-	if (JSON.stringify(lastJson) !== '{}') {
-		caretsArr = lastJson.carets.filter(function (c) {
-			return c.device !== deviceName;
-		});
-	}
-	caretsArr.push({
-		'device': deviceName,
-		'start': caret.start,
-		'end': caret.end
-	});
-
-	lastSendTime = (0, _getTimeStamp2.default)();
-	var sendObj = {
-		'time': lastSendTime,
-		'carets': caretsArr,
-		'lines': textarea.value.split(/\r?\n/g).map(function (line, i) {
-			return {
-				num: i + 1,
-				text: line
-			};
-		}),
-		'device': deviceName
-	};
-	var url = '/send/';
-	return fetch(url, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(sendObj),
-		mode: 'cors'
-	}).then(function (res) {
-		return res.text();
-	});
-};
-
-var update = function update(arr) {
-	if (arr !== undefined) {
-		var t = arr.map(function (line) {
-			return line.text;
-		}).join('\n');
-		textarea.value = t;
-	} else {
-		console.log('#update: arr is undefined');
-	}
-};
-
-var check = function check() {
-	var url = '/check/';
-	return fetch(url, {
-		method: 'GET',
-		mode: 'cors'
-	}).then(function (res) {
-		return res.text();
-	}).then(function (data) {
-		var decodedText = decodeURI(data);
-		var json = JSON.parse(decodedText);
-		return json;
-	});
-};
-
-textarea.addEventListener('click', function (e) {
-	send();
 });
-textarea.addEventListener('keyup', function (e) {
-	send();
-});
-
-setInterval(function () {
-	check().then(function (json) {
-		console.log(json);
-
-		if (JSON.stringify(json) === '{}') return;
-
-		if (json.lines !== undefined) {
-			// console.log(json.device, json.lines.map(line => line.text).join('\n'))
-		}
-		if (lastSendTime < json.time) {
-			update(json.lines);
-		}
-		lastJson = json;
-
-		var carets = document.querySelectorAll('.caret');
-		if (json.carets !== undefined) {
-			json.carets.forEach(function (c) {
-				var existed = false;
-				carets.forEach(function (caretElem) {
-					var deviceName = caretElem.getAttribute('device-name');
-					if (deviceName === c.device) {
-						// move
-						existed = true;
-						moveCarets(caretElem, c.start);
-					}
-				});
-				if (!existed) {
-					// add
-					var newDevice = document.createElement('span');
-					newDevice.classList.add('device-name');
-					newDevice.textContent = c.device;
-					var newFlag = document.createElement('div');
-					newFlag.classList.add('flag');
-					newFlag.appendChild(newDevice);
-					var newCaret = document.createElement('div');
-					newCaret.classList.add('caret');
-					newCaret.setAttribute('device-name', c.device);
-					newCaret.appendChild(newFlag);
-					moveCarets(newCaret, c.start);
-					document.querySelector('.container').appendChild(newCaret);
-				}
-			});
-		}
-	});
-}, 400);
 
 /***/ }),
-/* 2 */
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _api = __webpack_require__(1);
+
+var _api2 = _interopRequireDefault(_api);
+
+var _getCaretCoordinates = __webpack_require__(4);
+
+var _getCaretCoordinates2 = _interopRequireDefault(_getCaretCoordinates);
+
+var _getTimeStamp = __webpack_require__(5);
+
+var _getTimeStamp2 = _interopRequireDefault(_getTimeStamp);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var riot = __webpack_require__(0);
+
+riot.tag2('app', '<header> <h1>MiddleDrive</h1> </header> <div class="container"> <textarea ref="textarea" click="{textareaMouseUpped}" keyup="{textareaKeyUpped}"></textarea> <div class="caret" ref="myCaret" device-name="{deviceName}"> <div class="flag"><span class="device-name">{deviceName}</span></div> </div> </div>', '', '', function (opts) {
+    var _this = this;
+
+    this.deviceName = this.opts.deviceName;
+    this.lastSendTime = 0;
+    this.lastJson = {};
+    this.caret = { start: 0, end: 0 };
+
+    this.on('mount', function () {
+        console.log(_this.opts);
+        _this.startCheck();
+    });
+
+    this.textareaMouseUpped = function (e) {
+        this.send();
+    }.bind(this);
+    this.textareaKeyUpped = function (e) {
+        this.send();
+    }.bind(this);
+
+    this.moveCarets = function (textarea, caretElem, pos) {
+        this.caret = {
+            start: textarea.selectionStart,
+            end: textarea.selectionEnd
+        };
+
+        var coordinates = (0, _getCaretCoordinates2.default)(textarea, pos);
+        caretElem.style.top = textarea.offsetTop - textarea.scrollTop + coordinates.top - 5 + 'px';
+        caretElem.style.left = textarea.offsetLeft - textarea.scrollLeft + coordinates.left + 'px';
+    }.bind(this);
+
+    this.send = function () {
+        var myCaret = document.querySelector('.caret');
+        this.moveCarets(this.refs.textarea, myCaret, this.refs.textarea.selectionStart);
+
+        this.lastSendTime = (0, _getTimeStamp2.default)();
+
+        var makeLatestCaretArray = function makeLatestCaretArray(prevJson, myDeviceName, myCaretObj) {
+            var caretsArr = [];
+            if (JSON.stringify(prevJson) !== '{}') {
+                caretsArr = prevJson.carets.filter(function (c) {
+                    return c.device !== myDeviceName;
+                });
+            }
+            caretsArr.push({
+                'device': myDeviceName,
+                'start': myCaretObj.start,
+                'end': myCaretObj.end
+            });
+            return caretsArr;
+        };
+        var getLines = function getLines(ele) {
+            return ele.value.split(/\r?\n/g).map(function (line, i) {
+                return { num: i + 1, text: line };
+            });
+        };
+
+        var sendObj = {
+            'time': this.lastSendTime,
+            'device': this.deviceName,
+            'carets': makeLatestCaretArray(this.lastJson, this.deviceName, this.caret),
+            'lines': getLines(this.refs.textarea)
+        };
+        return _api2.default.send(sendObj);
+    }.bind(this);
+
+    this.startCheck = function () {
+        var _this2 = this;
+
+        setInterval(function () {
+            _api2.default.check().then(function (json) {
+                console.log('check', json);
+
+                if (JSON.stringify(json) === '{}') return;
+
+                if (_this2.lastSendTime < json.time) {
+                    var update = function update(arr) {
+                        if (arr !== undefined) {
+                            var t = arr.map(function (line) {
+                                return line.text;
+                            }).join('\n');
+                            _this2.refs.textarea.value = t;
+                        } else {
+                            console.log('#update: arr is undefined');
+                        }
+                    };
+                    update(json.lines);
+                }
+                _this2.lastJson = json;
+
+                var caretElems = document.querySelectorAll('.caret');
+                if (json.carets !== undefined) {
+                    json.carets.forEach(function (c) {
+                        var existed = false;
+                        caretElems.forEach(function (caretElem) {
+                            var deviceName = caretElem.getAttribute('device-name');
+                            if (deviceName === c.device) {
+                                existed = true;
+                                _this2.moveCarets(_this2.refs.textarea, caretElem, c.start);
+                            }
+                        });
+                        if (!existed) {
+                            var newDevice = document.createElement('span');
+                            newDevice.classList.add('device-name');
+                            newDevice.textContent = c.device;
+                            var newFlag = document.createElement('div');
+                            newFlag.classList.add('flag');
+                            newFlag.appendChild(newDevice);
+                            var newCaret = document.createElement('div');
+                            newCaret.classList.add('caret');
+                            newCaret.setAttribute('device-name', c.device);
+                            newCaret.appendChild(newFlag);
+                            _this2.moveCarets(_this2.refs.textarea, newCaret, c.start);
+                            document.querySelector('.container').appendChild(newCaret);
+                        }
+                    });
+                }
+            });
+        }, 400);
+    }.bind(this);
+});
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3284,18 +3335,7 @@ var getCaretCoordinates = function getCaretCoordinates(element, position) {
 exports.default = getCaretCoordinates;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var riot = __webpack_require__(0);
-
-riot.tag2('app', '<header> <h1>MiddleDrive</h1> </header> <div class="container"> <div class="caret"> <div class="flag"><span class="device-name">unknown</span></div> </div> <textarea class="textarea"></textarea> </div>', '', '', function (opts) {});
-
-/***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

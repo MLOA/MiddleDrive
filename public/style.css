@@ -15,7 +15,7 @@ body {
 }
 
 body main header {
-	background: gray;
+	background: #66BB6A;
 	padding: 8px 16px;
 	padding: 0.5rem 1rem;
 	display: -webkit-box;
@@ -52,7 +52,7 @@ body main .container {
 	border:1px solid #cccccc;
 }
 
-body main .container .textarea {
+body main .container textarea {
 	width: 100%;
 	height: 100%;
 	resize: none;
@@ -93,4 +93,44 @@ body main .container .caret .flag {
 	-webkit-box-align: center;
 	    -ms-flex-align: center;
 	        align-items: center;
+}
+
+body main .container .caret:nth-child(2) {
+	border-left: 2px solid #9E9E9E;
+}
+
+body main .container .caret:nth-child(2) .flag {
+	background: #9E9E9E;
+	color: white;
+	border: 2px solid #9E9E9E;
+}
+
+body main .container .caret:nth-child(3) {
+	border-left: 2px solid #FFC107;
+}
+
+body main .container .caret:nth-child(3) .flag {
+	background: #FFC107;
+	color: white;
+	border: 2px solid #FFC107;
+}
+
+body main .container .caret:nth-child(4) {
+	border-left: 2px solid #03A9F4;
+}
+
+body main .container .caret:nth-child(4) .flag {
+	background: #03A9F4;
+	color: white;
+	border: 2px solid #03A9F4;
+}
+
+body main .container .caret:nth-child(5) {
+	border-left: 2px solid #4CAF50;
+}
+
+body main .container .caret:nth-child(5) .flag {
+	background: #4CAF50;
+	color: white;
+	border: 2px solid #4CAF50;
 }
