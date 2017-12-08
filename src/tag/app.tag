@@ -1,11 +1,18 @@
 app
 	header
 		h1 MiddleDrive
+		.device-view(each='{deviceName in otherDevices}')
+			.icon
+			span.device-name-view {deviceName}
 
 	.container
 		textarea(ref='textarea'
 			click='{textareaMouseUpped}'
 			keyup='{textareaKeyUpped}')
+		.position-mark
+		.position-mark
+		.position-mark
+		.position-mark
 		.caret(ref='myCaret' device-name='{deviceName}')
 			.flag
 				span.device-name {deviceName}
@@ -19,9 +26,9 @@ app
 		this.lastSendTime = 0
 		this.lastJson = {}
 		this.caret = { start: 0, end: 0 }
+		this.otherDevices = ['kokok', 'j', 'K', 'O']
 
 		this.on('mount', () => {
-			console.log(this.opts)
 			this.startCheck()
 		})
 
@@ -109,6 +116,10 @@ app
 
 					const caretElems = document.querySelectorAll('.caret')
 					if (json.carets !== undefined) {
+						this.otherDevices =
+							json.carets
+								.map(d => d.device)
+								.filter(name => (name !== this.deviceName))
 						json.carets.forEach(c => {
 							let existed = false
 							caretElems.forEach(caretElem => {
@@ -135,5 +146,6 @@ app
 						})
 					}
 				})
+				//- this.update()
 			}, 400)
 		}

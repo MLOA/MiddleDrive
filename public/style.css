@@ -25,8 +25,8 @@ body main header {
 	    -ms-flex-align: center;
 	        align-items: center;
 	color: white;
-	-webkit-box-shadow:0px 0px 6px 0px #b4b4b0;
-	        box-shadow:0px 0px 6px 0px #b4b4b0;
+	-webkit-box-shadow:0px 0px 8px 0px #080808;
+	        box-shadow:0px 0px 8px 0px #080808;
 }
 
 body main header h1 {
@@ -36,8 +36,56 @@ body main header h1 {
 	font-weight: 300;
 }
 
+body main header .device-view {
+	display: -webkit-inline-box;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	margin: 0 0 0 16px;
+	margin: 0 0 0 1rem;
+	line-height: 25.6px;
+	line-height: 1.6rem;
+	font-size: 12.8px;
+	font-size: 0.8rem;
+	border: 1px solid white;
+}
+
+body main header .device-view .icon {
+	display: inline-block;
+	width: 25.6px;
+	width: 1.6rem;
+	height: 25.6px;
+	height: 1.6rem;
+	background: gray;
+}
+
+body main header .device-view .device-name-view {
+	margin: 0 4.8px;
+	margin: 0 0.3rem;
+	min-width: 32px;
+	min-width: 2rem;
+}
+
+body main header .device-view:nth-child(2) > .icon {
+	background: #FFC107;
+}
+
+body main header .device-view:nth-child(3) > .icon {
+	background: #03A9F4;
+}
+
+body main header .device-view:nth-child(4) > .icon {
+	background: #4CAF50;
+}
+
+body main header .device-view:nth-child(5) > .icon {
+	background: cyan;
+}
+
 body main .container {
-	// position: relative;
+	position: relative;
 	width: 100%;
 	max-width: 720px;
 	height: 800px;
@@ -59,6 +107,50 @@ body main .container textarea {
 	display: block;
 	outline: none;
 	border: 0;
+}
+
+body main .container .position-mark {
+	position: absolute;
+	width: 32px;
+	width: 2rem;
+	height: 32px;
+	height: 2rem;
+}
+
+body main .container .position-mark:nth-child(2) {
+	top: 48px;
+	top: 3rem;
+	left: 48px;
+	left: 3rem;
+	border-bottom: 1px solid #d1d1d1;
+	border-right: 1px solid #d1d1d1;
+}
+
+body main .container .position-mark:nth-child(3) {
+	top: 48px;
+	top: 3rem;
+	right: 48px;
+	right: 3rem;
+	border-bottom: 1px solid #d1d1d1;
+	border-left: 1px solid #d1d1d1;
+}
+
+body main .container .position-mark:nth-child(4) {
+	bottom: 48px;
+	bottom: 3rem;
+	left: 48px;
+	left: 3rem;
+	border-top: 1px solid #d1d1d1;
+	border-right: 1px solid #d1d1d1;
+}
+
+body main .container .position-mark:nth-child(5) {
+	bottom: 48px;
+	bottom: 3rem;
+	right: 48px;
+	right: 3rem;
+	border-top: 1px solid #d1d1d1;
+	border-left: 1px solid #d1d1d1;
 }
 
 body main .container .caret {
@@ -95,41 +187,42 @@ body main .container .caret .flag {
 	        align-items: center;
 }
 
-body main .container .caret:nth-child(2) {
+body main .container .caret:nth-child(6) {
+	visibility: hidden;
 	border-left: 2px solid #9E9E9E;
 }
 
-body main .container .caret:nth-child(2) .flag {
+body main .container .caret:nth-child(6) .flag {
 	background: #9E9E9E;
 	color: white;
 	border: 2px solid #9E9E9E;
 }
 
-body main .container .caret:nth-child(3) {
+body main .container .caret:nth-child(7) {
 	border-left: 2px solid #FFC107;
 }
 
-body main .container .caret:nth-child(3) .flag {
+body main .container .caret:nth-child(7) .flag {
 	background: #FFC107;
 	color: white;
 	border: 2px solid #FFC107;
 }
 
-body main .container .caret:nth-child(4) {
+body main .container .caret:nth-child(8) {
 	border-left: 2px solid #03A9F4;
 }
 
-body main .container .caret:nth-child(4) .flag {
+body main .container .caret:nth-child(8) .flag {
 	background: #03A9F4;
 	color: white;
 	border: 2px solid #03A9F4;
 }
 
-body main .container .caret:nth-child(5) {
+body main .container .caret:nth-child(9) {
 	border-left: 2px solid #4CAF50;
 }
 
-body main .container .caret:nth-child(5) .flag {
+body main .container .caret:nth-child(9) .flag {
 	background: #4CAF50;
 	color: white;
 	border: 2px solid #4CAF50;

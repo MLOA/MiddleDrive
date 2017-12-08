@@ -3130,16 +3130,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var riot = __webpack_require__(0);
 
-riot.tag2('app', '<header> <h1>MiddleDrive</h1> </header> <div class="container"> <textarea ref="textarea" click="{textareaMouseUpped}" keyup="{textareaKeyUpped}"></textarea> <div class="caret" ref="myCaret" device-name="{deviceName}"> <div class="flag"><span class="device-name">{deviceName}</span></div> </div> </div>', '', '', function (opts) {
+riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{deviceName in otherDevices}"> <div class="icon"></div><span class="device-name-view">{deviceName}</span> </div> </header> <div class="container"> <textarea ref="textarea" click="{textareaMouseUpped}" keyup="{textareaKeyUpped}"></textarea> <div class="position-mark"></div> <div class="position-mark"></div> <div class="position-mark"></div> <div class="position-mark"></div> <div class="caret" ref="myCaret" device-name="{deviceName}"> <div class="flag"><span class="device-name">{deviceName}</span></div> </div> </div>', '', '', function (opts) {
     var _this = this;
 
     this.deviceName = this.opts.deviceName;
     this.lastSendTime = 0;
     this.lastJson = {};
     this.caret = { start: 0, end: 0 };
+    this.otherDevices = ['kokok', 'j', 'K', 'O'];
 
     this.on('mount', function () {
-        console.log(_this.opts);
         _this.startCheck();
     });
 
@@ -3222,6 +3222,11 @@ riot.tag2('app', '<header> <h1>MiddleDrive</h1> </header> <div class="container"
 
                 var caretElems = document.querySelectorAll('.caret');
                 if (json.carets !== undefined) {
+                    _this2.otherDevices = json.carets.map(function (d) {
+                        return d.device;
+                    }).filter(function (name) {
+                        return name !== _this2.deviceName;
+                    });
                     json.carets.forEach(function (c) {
                         var existed = false;
                         caretElems.forEach(function (caretElem) {
