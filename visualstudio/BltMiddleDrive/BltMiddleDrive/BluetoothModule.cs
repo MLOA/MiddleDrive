@@ -68,12 +68,26 @@ namespace BltMiddleDrive {
         }
 
         async Task InitBluetoothServer() {
-            var provider = await RfcommServiceProvider.CreateAsync(RfcommServiceId.ObexObjectPush);
-            StreamSocketListener listener = new StreamSocketListener();
-            listener.ConnectionReceived += OnConnectionReceived;
-            await listener.BindServiceNameAsync(provider.ServiceId.AsString(), SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
-            provider.StartAdvertising(listener);
-            Console.WriteLine("running!");
+            var devInfos = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelector());
+
+            foreach (var devInfo in devInfos) {
+                var bluetoothDevice = await BluetoothDevice.FromIdAsync(devInfo.Id);
+                var rfcommDeviceServices = await bluetoothDevice.GetRfcommServicesAsync();
+                if (rfcommDeviceServices.Services.Count != 0) {
+                    Console.WriteLine(devInfo.Name + devInfo.Id + "に接続しようとしています");
+                    var service = rfcommDeviceServices.Services[0];
+                    Console.WriteLine(service.ServiceId.AsString());
+                    //Console.WriteLine(RfcommServiceId.ObexObjectPush.AsString());
+                    //var provider = await RfcommServiceProvider.CreateAsync(RfcommServiceId.ObexObjectPush);
+                    var provider = await RfcommServiceProvider.CreateAsync(service.ServiceId);
+                    StreamSocketListener listener = new StreamSocketListener();
+                    listener.ConnectionReceived += OnConnectionReceived;
+                    await listener.BindServiceNameAsync(provider.ServiceId.AsString(), SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
+                    provider.StartAdvertising(listener);
+                    Console.WriteLine("running!");
+                    break;
+                }
+            }
         }
 
         async Task InitBluetoothClient() {
@@ -82,8 +96,10 @@ namespace BltMiddleDrive {
             foreach (var devInfo in devInfos) {
                 var bluetoothDevice = await BluetoothDevice.FromIdAsync(devInfo.Id);
                 var rfcommDeviceServices = await bluetoothDevice.GetRfcommServicesAsync();
-                if(rfcommDeviceServices.Services.Count != 0) {
+                if (rfcommDeviceServices.Services.Count != 0) {
+                    Console.WriteLine(devInfo.Name + devInfo.Id + "に接続しようとしています");
                     var service = rfcommDeviceServices.Services[0];
+                    Console.WriteLine(service.ServiceId.AsString());
                     var socket = new StreamSocket();
                     await socket.ConnectAsync(service.ConnectionHostName, service.ConnectionServiceName, SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
                     StartStream(socket);
@@ -98,6 +114,7 @@ namespace BltMiddleDrive {
         }
 
         void StartStream(StreamSocket socket) {
+            Console.WriteLine("接続しました");
             var writer = new DataWriter(socket.OutputStream);
             writer.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
             writers.Add(writer);
