@@ -3137,7 +3137,7 @@ riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{
     this.lastSendTime = 0;
     this.lastJson = {};
     this.caret = { start: 0, end: 0 };
-    this.otherDevices = ['kokok', 'j', 'K', 'O'];
+    this.otherDevices = [];
 
     this.on('mount', function () {
         _this.startCheck();
@@ -3162,8 +3162,7 @@ riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{
     }.bind(this);
 
     this.send = function () {
-        var myCaret = document.querySelector('.caret');
-        this.moveCarets(this.refs.textarea, myCaret, this.refs.textarea.selectionStart);
+        this.moveCarets(this.refs.textarea, this.refs.myCaret, this.refs.textarea.selectionStart);
 
         this.lastSendTime = (0, _getTimeStamp2.default)();
 
@@ -3217,6 +3216,8 @@ riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{
                         }
                     };
                     update(json.lines);
+                    _this2.refs.textarea.selectionStart = _this2.caret.start;
+                    _this2.refs.textarea.selectionEnd = _this2.caret.end;
                 }
                 _this2.lastJson = json;
 
@@ -3253,6 +3254,7 @@ riot.tag2('app', '<header> <h1>MiddleDrive</h1> <div class="device-view" each="{
                     });
                 }
             });
+            _this2.update();
         }, 400);
     }.bind(this);
 });

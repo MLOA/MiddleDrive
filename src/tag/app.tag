@@ -26,7 +26,7 @@ app
 		this.lastSendTime = 0
 		this.lastJson = {}
 		this.caret = { start: 0, end: 0 }
-		this.otherDevices = ['kokok', 'j', 'K', 'O']
+		this.otherDevices = []
 
 		this.on('mount', () => {
 			this.startCheck()
@@ -60,8 +60,7 @@ app
 		}
 
 		send() {
-			const myCaret = document.querySelector('.caret')
-			this.moveCarets(this.refs.textarea, myCaret, this.refs.textarea.selectionStart)
+			this.moveCarets(this.refs.textarea, this.refs.myCaret, this.refs.textarea.selectionStart)
 
 			this.lastSendTime = getTimeStamp()
 
@@ -111,6 +110,8 @@ app
 							}
 						}
 						update(json.lines)
+						this.refs.textarea.selectionStart = this.caret.start
+						this.refs.textarea.selectionEnd = this.caret.end
 					}
 					this.lastJson = json
 
@@ -146,6 +147,6 @@ app
 						})
 					}
 				})
-				//- this.update()
+				this.update()
 			}, 400)
 		}

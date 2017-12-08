@@ -14,6 +14,16 @@ body {
 	'ヒラギノ角ゴ ProN W3', Meiryo, sans-serif
 }
 
+body main {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+}
+
 body main header {
 	background: #66BB6A;
 	padding: 8px 16px;
@@ -85,24 +95,29 @@ body main header .device-view:nth-child(5) > .icon {
 }
 
 body main .container {
+	-webkit-box-flex: 1;
+	    -ms-flex-positive: 1;
+	        flex-grow: 1;
 	position: relative;
 	width: 100%;
 	max-width: 720px;
-	height: 800px;
+	// height: 800px;
+	min-height: 300vh;
 	padding: 80px 80px;
 	padding: 5rem 5rem;
 	margin: 48px auto;
 	margin: 3rem auto;
 	background: white;
-	/* box-shadow */
-	-webkit-box-shadow:0px 0px 6px 0px #b4b4b0;
-	        box-shadow:0px 0px 6px 0px #b4b4b0;
-	border:1px solid #cccccc;
+	-webkit-box-shadow: 0px 0px 8px 0px #b4b4b0;
+	        box-shadow: 0px 0px 8px 0px #b4b4b0;
+	border: 1px solid #cccccc;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
 }
 
 body main .container textarea {
 	width: 100%;
-	height: 100%;
 	resize: none;
 	display: block;
 	outline: none;
