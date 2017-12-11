@@ -1,22 +1,51 @@
 {
-  "name": "middolle-drive",
+  "name": "middledrive",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "./dist/app.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "node-fetch": "^1.7.3",
+    "riot": "^3.7.4",
+    "serialport": "^6.0.4",
+    "sqlite3": "^3.1.13"
   },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "babel-preset-es2015-riot": "^1.1.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "nodemon": "^1.12.1",
+    "npm-run-all": "^4.1.2",
+    "postcss-cli": "^4.1.1",
+    "postcss-cssnext": "^3.0.2",
+    "postcss-simple-vars": "^4.1.0",
+    "pug-cli": "^1.0.0-alpha6",
+    "tag-pug-loader": "^1.0.0",
+    "webpack": "^3.9.1",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "scripts": {
+    "build": "run-p build:*",
+    "build:js": "webpack",
+    "build:pug": "pug src/pug/index.pug -o public/ -P",
+    "build:postcss": "postcss src/postcss/*.css -d public/ --no-map -u postcss-simple-vars postcss-cssnext",
+    "postbuild": "npm run start",
+    "watch": "run-p watch:* start",
+    "watch:js": "npm run build:js -- -w",
+    "watch:pug": "npm run build:pug -- -w",
+    "watch:postcss": "npm run build:postcss -- -w",
+    "start": "nodemon dist/app",
+    "clean": "rm -rf dist",
+    "server": "visualstudio/BltMiddleDrive/BltMiddleDrive/bin/Debug/BltMiddleDrive.exe -server",
+    "client": "visualstudio/BltMiddleDrive/BltMiddleDrive/bin/Debug/BltMiddleDrive.exe"
+  },
+  "author": "MLOA",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MLOA/Middole-Drive.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MLOA/Middole-Drive/issues"
-  },
-  "homepage": "https://github.com/MLOA/Middole-Drive#readme",
-  "devDependencies": {
-    "electron": "^1.7.9"
+    "url": "git+https://github.com/MLOA/MiddleDrive.git"
   }
 }

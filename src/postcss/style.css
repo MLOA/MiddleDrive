@@ -1,0 +1,188 @@
+$baseColor: #efefef;
+$userColor0: #9E9E9E;
+$userColor1: #FFC107;
+$userColor2: #03A9F4;
+$userColor3: #4CAF50;
+$userColor4: cyan;
+
+* {
+	box-sizing: border-box;
+}
+
+body, p, h1 {
+	margin: 0;
+}
+
+body {
+	background: $baseColor;
+	font-family: 'Roboto', -apple-system, BlinkMacSystemFont,
+	'Helvetica Neue', 'Segoe UI','Noto Sans Japanese',
+	'ヒラギノ角ゴ ProN W3', Meiryo, sans-serif;
+	& main {
+		display: flex;
+		flex-direction: column;
+		& header {
+			background: #66BB6A;
+			padding: 0.5rem 1rem;
+			display: flex;
+			align-items: center;
+			color: white;
+			box-shadow:0px 0px 8px 0px #080808;
+			& .logo {
+				$logoWidth: 3rem;
+				width: $logoWidth;
+				height: $logoWidth;
+				& img {
+					width: 100%;
+					height: 100%;
+				}
+			}
+			& h1 {
+				flex-grow: 1;
+				font-weight: 300;
+			}
+			& .device-view {
+				$deviceViewHeight: 1.6rem;
+				display: inline-flex;
+				align-items: center;
+				margin: 0 0 0 1rem;
+				line-height: $deviceViewHeight;
+				font-size: 0.8rem;
+				border: 1px solid white;
+				& .icon {
+					display: inline-block;
+					width: $deviceViewHeight;
+					height: $deviceViewHeight;
+					background: gray;
+				}
+				& .device-name-view {
+					margin: 0 0.3rem;
+					min-width: 2rem;
+				}
+			}
+			& .device-view:nth-child(2) > .icon {
+				background: $userColor1;
+			}
+			& .device-view:nth-child(3) > .icon {
+				background: $userColor2;
+			}
+			& .device-view:nth-child(4) > .icon {
+				background: $userColor3;
+			}
+			& .device-view:nth-child(5) > .icon {
+				background: $userColor4;
+			}
+		}
+		& .container {
+			flex-grow: 1;
+			position: relative;
+			width: 100%;
+			max-width: 720px;
+			// height: 800px;
+			min-height: 300vh;
+			padding: 5rem 5rem;
+			margin: 3rem auto;
+			background: white;
+			box-shadow: 0px 0px 8px 0px #b4b4b0;
+			border: 1px solid #cccccc;
+			display: flex;
+			& textarea {
+				width: 100%;
+				resize: none;
+				display: block;
+				outline: none;
+				border: 0;
+			}
+			& .position-mark {
+				position: absolute;
+				$lineColor: #d1d1d1;
+				$lineLength: 2rem;
+				$gap: 3rem;
+				width: $lineLength;
+				height: $lineLength;
+				&:nth-child(2) {
+					top: $gap;
+					left: $gap;
+					border-bottom: 1px solid $lineColor;
+					border-right: 1px solid $lineColor;
+				}
+				&:nth-child(3) {
+					top: $gap;
+					right: $gap;
+					border-bottom: 1px solid $lineColor;
+					border-left: 1px solid $lineColor;
+				}
+				&:nth-child(4) {
+					bottom: $gap;
+					left: $gap;
+					border-top: 1px solid $lineColor;
+					border-right: 1px solid $lineColor;
+				}
+				&:nth-child(5) {
+					bottom: $gap;
+					right: $gap;
+					border-top: 1px solid $lineColor;
+					border-left: 1px solid $lineColor;
+				}
+			}
+			& .caret {
+				position: absolute;
+				top: -10rem;
+				left: -10rem;
+				height: 1.5rem;
+				border-left: 2px solid cyan;
+				display: inline-block;
+				& .flag {
+					position: relative;
+					top: -0.5rem;
+					left: -2px;
+					background: cyan;
+					color: white;
+					border: 2px solid cyan;
+					font-size: 0.7rem;
+					height: 0.7rem;
+					line-height: 0.8rem;
+					display: flex;
+					align-items: center;
+				}
+			}
+			& .caret:nth-child(6) {
+				visibility: hidden;
+				$userColor0: #9E9E9E;
+				border-left: 2px solid $userColor0;
+				& .flag {
+					background: $userColor0;
+					color: white;
+					border: 2px solid $userColor0;
+				}
+			}
+			& .caret:nth-child(7) {
+				$userColor1: #FFC107;
+				border-left: 2px solid $userColor1;
+				& .flag {
+					background: $userColor1;
+					color: white;
+					border: 2px solid $userColor1;
+				}
+			}
+			& .caret:nth-child(8) {
+				$userColor2: #03A9F4;
+				border-left: 2px solid $userColor2;
+				& .flag {
+					background: $userColor2;
+					color: white;
+					border: 2px solid $userColor2;
+				}
+			}
+			& .caret:nth-child(9) {
+				$userColor3: #4CAF50;
+				border-left: 2px solid $userColor3;
+				& .flag {
+					background: $userColor3;
+					color: white;
+					border: 2px solid $userColor3;
+				}
+			}
+		}
+	}
+}
