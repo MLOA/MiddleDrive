@@ -26,4 +26,6 @@ Bluetooth通信はC#でwin APIを利用することで実現し、Webサーバ�
 
 2017-12 信州未来アプリコンテスト0 信越情報通信懇談会会長賞
 
-http://www.pref.nagano.lg.jp/joho/app-contest/app-contest0
+~[http://www.pref.nagano.lg.jp/joho/app-contest/app-contest0](http://www.pref.nagano.lg.jp/joho/app-contest/app-contest0)~ リンク切れしていたので下記画像添付
+
+![受賞写真](http://shisonoha.net/wp-content/uploads/2017/08/20171209_163800-640x360.jpg)
